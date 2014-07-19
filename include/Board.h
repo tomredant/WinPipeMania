@@ -15,6 +15,9 @@ class Board
     private:
         SDL_Surface *background, *pipes_sprite1, *pipes_sprite2;
         Pipe *slots[14][14];
+        static const int x_offset, y_offset;
+        static const int lines, columns;
+        static const int slotSize;
 };
 
 #endif // BOARD_H

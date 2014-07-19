@@ -1,14 +1,20 @@
 #include "Board.h"
 #include "Pipe.h"
 
+const int Board::x_offset = 227;
+const int Board::y_offset = 35;
+const int Board::lines = 14;
+const int Board::columns = 14;
+const int Board::slotSize = 48;
+
 Board::Board (SDL_Surface* back, SDL_Surface* pipe1, SDL_Surface* pipe2)
 {
     background = back;
     pipes_sprite1 = pipe1;
     pipes_sprite2 = pipe2;
 
-    for (int line = 0; line < 14; line++) {
-        for (int column = 0; column < 14; column++) {
+    for (int line = 0; line < lines; line++) {
+        for (int column = 0; column < columns; column++) {
             slots[line][column] = NULL;
         }
     }
@@ -16,18 +22,13 @@ Board::Board (SDL_Surface* back, SDL_Surface* pipe1, SDL_Surface* pipe2)
 
 void Board::mouseClick (int x, int y)
 {
-    // TODO
-    // Determine slot based on mouse click x y
-    // board offset = 227, 35
-    // Put pipe in slot. Remeber to delete old one before
-
-    int x_min = 227, x_max = x_min + (14 * 48);
-    int y_min = 35, y_max = y_min + (14 * 48);
+    int x_min = x_offset, x_max = x_min + (lines * slotSize);
+    int y_min = y_offset, y_max = y_min + (columns * slotSize);
 
     // Check limits
     if (x >= x_min && x <= x_max && y >= y_min && y <= y_max) {
-        int line = (x - x_min) / 48;
-        int column = (y - y_min) / 48;
+        int line = (x - x_min) / slotSize;
+        int column = (y - y_min) / slotSize;
         Pipe **pipe = &slots[line][column];
 
         if (*pipe)
@@ -39,11 +40,10 @@ void Board::mouseClick (int x, int y)
 
 SDL_Rect Board::getSlotScreenPosition (int line, int column)
 {
-    int x_offset = 227, y_offset = 35;
     SDL_Rect pos;
 
-    pos.x = (line * 48) + x_offset;
-    pos.y = (column * 48) + y_offset;
+    pos.x = (line * slotSize) + x_offset;
+    pos.y = (column * slotSize) + y_offset;
 
     return pos;
 }
@@ -54,8 +54,8 @@ void Board::Draw (SDL_Surface* screen, SDL_Rect* coordinates)
     SDL_BlitSurface(background, 0, screen, coordinates);
 
     // Draw all the pipes
-    for (int l = 0; l < 14; l++) {
-        for (int c = 0; c < 14; c++) {
+    for (int l = 0; l < lines; l++) {
+        for (int c = 0; c < columns; c++) {
             // if != NULL we have a pipe to draw
             if (slots[l][c] != NULL) {
                 SDL_Rect pos = getSlotScreenPosition(l, c);

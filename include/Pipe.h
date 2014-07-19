@@ -10,7 +10,6 @@ class Pipe
             Creates a new Pipe.
 
             SDL_Surface* - the pipe sprite
-            SDL_Rect* - the pipe image position in the sprite
             bool - pipe connection left
             bool - pipe connection right
             bool - pipe connection up
