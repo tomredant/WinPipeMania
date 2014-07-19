@@ -43,6 +43,7 @@ void Board::mouseClick (int x, int y)
         // Get top of the pool
         *pipe = pool[0];
         rotatePool();
+        (*pipe)->StartFlow();
     }
 }
 
@@ -63,6 +64,17 @@ SDL_Rect Board::getSlotScreenPosition (int line, int column)
     pos.y = (column * slotSize) + y_offset;
 
     return pos;
+}
+
+void Board::Update() {
+    // Updates pipes
+    for (int l = 0; l < lines; l++) {
+        for (int c = 0; c < columns; c++) {
+            if (slots[l][c] != NULL) {
+                slots[l][c]->Update();
+            }
+        }
+    }
 }
 
 void Board::Draw ()

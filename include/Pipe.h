@@ -3,8 +3,10 @@
 
 #include <SDL.h>
 
-#define WIDTH  48
-#define HEIGHT 48
+#define SIZE 48
+
+// 1 pixel every 125 miliseconds to fill the SIZE in 6 seconds
+#define FLOW_SPEED 125
 
 class Pipe
 {
@@ -31,6 +33,16 @@ class Pipe
             SDL_Rect* - the coordinates to draw this into
         */
         void Draw(SDL_Surface*, SDL_Rect*);
+
+        /*
+            Updates the pipe draw data.
+        */
+        void Update();
+
+        /*
+            Starts flowing water through this pipe.
+        */
+        void StartFlow();
     protected:
     private:
       void init(SDL_Surface*, SDL_Surface*, bool, bool, bool, bool);
@@ -46,6 +58,15 @@ class Pipe
 
       // which sides are open to connection in this pipe
       bool top, right, down, left;
+
+      // toggles water flowing for this pipe
+      bool flow;
+
+      // the number of pixels the water has already flowed
+      unsigned int flowed_pixels;
+
+      // time control
+      unsigned int time;
 };
 
 #endif // PIPE_H
