@@ -1,7 +1,9 @@
 #ifdef __cplusplus
     #include <cstdlib>
+    #include <ctime>
 #else
     #include <stdlib.h>
+    #include <time.h>
 #endif
 
 #include <SDL/SDL.h>
@@ -11,6 +13,9 @@
 
 int main ( int argc, char** argv )
 {
+    /* seed pseudo random numbers generator */
+    srand(time(NULL));
+
     // initialize SDL video
     if ( SDL_Init( SDL_INIT_VIDEO ) < 0 )
     {

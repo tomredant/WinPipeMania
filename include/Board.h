@@ -7,6 +7,14 @@
 #define BOARD_LINES 14
 #define BOARD_COLUMNS 14
 
+#define POOL_SIZE 5
+
+#define POOL_OFFSET_X 944
+#define POOL_OFFSET_Y 38
+#define POOL_SPACING 61
+#define POOL_TOP_x 944
+#define POOL_TOP_Y 312
+
 class Board
 {
     public:
@@ -29,9 +37,11 @@ class Board
         void Draw ();
     protected:
     private:
+        void rotatePool (void);
         SDL_Surface *screen, *background, *pipes_sprite1, *pipes_sprite2;
         SDL_Rect *coordinates;
         Pipe *slots[BOARD_LINES][BOARD_COLUMNS];
+        Pipe *pool[POOL_SIZE];
         static const int x_offset, y_offset;
         static const int slotSize;
         static const int lines, columns;

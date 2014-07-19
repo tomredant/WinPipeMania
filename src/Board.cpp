@@ -20,6 +20,10 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1
             slots[line][column] = NULL;
         }
     }
+
+    for (int p = 0; p < POOL_SIZE; p++) {
+        pool[p] = new Pipe(pipes_sprite1, pipes_sprite2);
+    }
 }
 
 void Board::mouseClick (int x, int y)
@@ -36,8 +40,19 @@ void Board::mouseClick (int x, int y)
         if (*pipe)
             delete *pipe;
 
-        *pipe = new Pipe(pipes_sprite1, pipes_sprite2, true, true, true, true);
+        // Get top of the pool
+        *pipe = pool[0];
+        rotatePool();
     }
+}
+
+void Board::rotatePool (void)
+{
+    for (int p = 0; p < POOL_SIZE - 1; p++) {
+        pool[p] = pool[p + 1];
+    }
+
+    pool[POOL_SIZE - 1] = new Pipe(pipes_sprite1, pipes_sprite2);
 }
 
 SDL_Rect Board::getSlotScreenPosition (int line, int column)
@@ -55,7 +70,7 @@ void Board::Draw ()
     // Draw background
     SDL_BlitSurface(background, 0, screen, coordinates);
 
-    // Draw all the pipes
+    // Draw all board pipes
     for (int l = 0; l < lines; l++) {
         for (int c = 0; c < columns; c++) {
             // if != NULL we have a pipe to draw
@@ -65,4 +80,17 @@ void Board::Draw ()
             }
         }
     }
+
+    // Draw pool pipes
+    SDL_Rect pos = {
+        .x = POOL_OFFSET_X,
+        .y = POOL_OFFSET_Y,
+    };
+
+    for (int p = POOL_SIZE - 1; p > 0; p--, pos.y += POOL_SPACING) {
+        pool[p]->Draw(screen, &pos);
+    }
+
+    pos.y = POOL_TOP_Y;
+    pool[0]->Draw(screen, &pos);
 }
