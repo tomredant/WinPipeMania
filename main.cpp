@@ -36,6 +36,20 @@ int main ( int argc, char** argv )
         return 1;
     }
 
+    SDL_Surface* pipesSprite = IMG_Load("pipes.png");
+    if (!pipesSprite)
+    {
+        printf("Unable to load pipesSprite: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    SDL_Surface* pipesSprite2 = IMG_Load("pipes2.png");
+    if (!pipesSprite)
+    {
+        printf("Unable to load pipesSprite2: %s\n", SDL_GetError());
+        return 1;
+    }
+
     // centre the bitmap on screen
     SDL_Rect dstrect;
     dstrect.x = (screen->w - background->w) / 2;
@@ -84,6 +98,8 @@ int main ( int argc, char** argv )
 
     // free loaded bitmap
     SDL_FreeSurface(background);
+    SDL_FreeSurface(pipesSprite);
+    SDL_FreeSurface(pipesSprite2);
 
     // all is well ;)
     printf("Exited cleanly\n");
