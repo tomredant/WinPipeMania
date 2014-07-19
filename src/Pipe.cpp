@@ -74,6 +74,9 @@ void Pipe::init(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param, bool t
     } else if(left == true) {
         sprite_position.x = 0;
         sprite_position.y = HEIGHT * 2;
+    } else {
+        sprite_position.x = WIDTH * 5;
+        sprite_position.y = HEIGHT * 2;
     }
 }
 
