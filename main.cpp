@@ -57,7 +57,7 @@ int main ( int argc, char** argv )
     dstrect.x = (screen->w - background->w) / 2;
     dstrect.y = (screen->h - background->h) / 2;
 
-    Board board = Board(background, pipes_sprite, pipes_sprite_2);
+    Board board = Board(screen, &dstrect, background, pipes_sprite, pipes_sprite_2);
 
     // program main loop
     bool done = false;
@@ -102,7 +102,7 @@ int main ( int argc, char** argv )
         SDL_FillRect(screen, 0, SDL_MapRGB(screen->format, 0, 0, 0));
 
         // draw bitmap
-        board.Draw(screen, &dstrect);
+        board.Draw();
         // DRAWING ENDS HERE
 
         // finally, update the screen :)

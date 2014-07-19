@@ -3,12 +3,14 @@
 
 const int Board::x_offset = 227;
 const int Board::y_offset = 35;
-const int Board::lines = 14;
-const int Board::columns = 14;
 const int Board::slotSize = 48;
+const int Board::lines = BOARD_LINES;
+const int Board::columns = BOARD_COLUMNS;
 
-Board::Board (SDL_Surface* back, SDL_Surface* pipe1, SDL_Surface* pipe2)
+Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1, SDL_Surface* pipe2)
 {
+    screen = s;
+    coordinates = c;
     background = back;
     pipes_sprite1 = pipe1;
     pipes_sprite2 = pipe2;
@@ -48,7 +50,7 @@ SDL_Rect Board::getSlotScreenPosition (int line, int column)
     return pos;
 }
 
-void Board::Draw (SDL_Surface* screen, SDL_Rect* coordinates)
+void Board::Draw ()
 {
     // Draw background
     SDL_BlitSurface(background, 0, screen, coordinates);
