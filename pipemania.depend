@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1405727799 source:/home/fabio/Dev/studies/pipemania/main.cpp
+	<cstdlib>
+	<stdlib.h>
+	<SDL/SDL.h>
+	<SDL/SDL_image.h>
+
