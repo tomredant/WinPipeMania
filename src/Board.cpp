@@ -36,7 +36,7 @@ void Board::mouseClick (int x, int y)
         if (*pipe)
             delete *pipe;
 
-        *pipe = new Pipe(pipes_sprite1, true, true, true, true);
+        *pipe = new Pipe(pipes_sprite1, pipes_sprite2, true, true, true, true);
     }
 }
 
