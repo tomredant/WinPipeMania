@@ -17,6 +17,14 @@ class Pipe
             bool - pipe connection down
         */
         Pipe(SDL_Surface*, SDL_Rect*, bool, bool, bool, bool);
+
+        /*
+            Draws this pipe.
+
+            SDL_Surface* - the surface to draw this into
+            SDL_Rect* - the coordinates to draw this into
+        */
+        void Draw(SDL_Surface*, SDL_Rect*);
     protected:
     private:
       // the pipe sprite image

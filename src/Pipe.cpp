@@ -10,3 +10,7 @@ Pipe::Pipe(SDL_Surface *sprite_param, SDL_Rect *sprite_position_param, bool left
     top = top_param;
     down = down_param;
 }
+
+void Pipe::Draw(SDL_Surface* surface, SDL_Rect* position) {
+    SDL_BlitSurface(sprite, sprite_position, surface, position);
+}
