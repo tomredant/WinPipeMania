@@ -6,6 +6,7 @@
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <Board.h>
 #include <Pipe.h>
 
 int main ( int argc, char** argv )
@@ -56,16 +57,7 @@ int main ( int argc, char** argv )
     dstrect.x = (screen->w - background->w) / 2;
     dstrect.y = (screen->h - background->h) / 2;
 
-    // the test pipe
-    SDL_Rect pipe_position;
-    pipe_position.w = 48;
-    pipe_position.h = 48;
-    pipe_position.x = 0;
-    pipe_position.y = 0;
-
-    Pipe pipe = Pipe(pipes_sprite, &pipe_position, true, true, true, true);
-
-    SDL_Rect mouse_position;
+    Board board = Board(background, pipes_sprite, pipes_sprite_2);
 
     // program main loop
     bool done = false;
@@ -96,10 +88,7 @@ int main ( int argc, char** argv )
                 {
                     int x, y;
                     SDL_GetMouseState(&x, &y);
-
-                    mouse_position.x = x;
-                    mouse_position.y = y;
-
+                    board.mouseClick(x, y);
                     break;
                 }
             }
@@ -113,8 +102,7 @@ int main ( int argc, char** argv )
         SDL_FillRect(screen, 0, SDL_MapRGB(screen->format, 0, 0, 0));
 
         // draw bitmap
-        SDL_BlitSurface(background, 0, screen, &dstrect);
-        pipe.Draw(screen, &mouse_position);
+        board.Draw(screen, &dstrect);
         // DRAWING ENDS HERE
 
         // finally, update the screen :)

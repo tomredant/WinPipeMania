@@ -16,7 +16,7 @@ class Pipe
             bool - pipe connection up
             bool - pipe connection down
         */
-        Pipe(SDL_Surface*, SDL_Rect*, bool, bool, bool, bool);
+        Pipe(SDL_Surface*, bool, bool, bool, bool);
 
         /*
             Draws this pipe.
@@ -31,7 +31,7 @@ class Pipe
       SDL_Surface *sprite;
 
       // the pipe image position in the sprite
-      SDL_Rect *sprite_position;
+      SDL_Rect sprite_position;
 
       // which sides are open to connection in this pipe
       bool left, right, top, down;
