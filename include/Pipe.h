@@ -21,6 +21,9 @@ class Pipe
         */
         Pipe(SDL_Surface*, SDL_Surface*, bool, bool, bool, bool);
 
+        /*! Creates a randomized Pipe object */
+        Pipe(SDL_Surface*, SDL_Surface*);
+
         /*
             Draws this pipe.
 
@@ -30,6 +33,8 @@ class Pipe
         void Draw(SDL_Surface*, SDL_Rect*);
     protected:
     private:
+      void init(SDL_Surface*, SDL_Surface*, bool, bool, bool, bool);
+
       // the pipe sprite image
       SDL_Surface *sprite;
 

@@ -2,6 +2,20 @@
 
 Pipe::Pipe(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param, bool top_param, bool right_param, bool down_param, bool left_param)
 {
+    init(sprite_param, alt_sprite_param, top_param, right_param, down_param, left_param);
+}
+
+Pipe::Pipe(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param)
+{
+    bool t = rand() & 0x1;
+    bool r = rand() & 0x1;
+    bool d = rand() & 0x1;
+    bool l = rand() & 0x1;
+    init(sprite_param, alt_sprite_param, t, r, d, l);
+}
+
+void Pipe::init(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param, bool top_param, bool right_param, bool down_param, bool left_param)
+{
     sprite = sprite_param;
     alt_sprite = alt_sprite_param;
 
@@ -59,6 +73,9 @@ Pipe::Pipe(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param, bool top_pa
         sprite_position.y = HEIGHT * 2;
     } else if(left == true) {
         sprite_position.x = 0;
+        sprite_position.y = HEIGHT * 2;
+    } else {
+        sprite_position.x = WIDTH * 5;
         sprite_position.y = HEIGHT * 2;
     }
 }
