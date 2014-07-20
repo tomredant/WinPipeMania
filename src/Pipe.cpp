@@ -112,7 +112,7 @@ void Pipe::Update() {
     }
 
     // determines the turn flow direction when it reaches the middle
-    if(flow_turn_position == 0 && flowed_pixels >= PIPE_SIZE / 2) {
+    if(flow_turn_position == 0 && flowed_pixels >= Pipe::pipe_size_middle_start) {
         // TODO calculate this based on the next connections
         flow_turn_position = FLOW_RIGHT;
     }
@@ -123,6 +123,7 @@ void Pipe::StartFlow(int start_position) {
     if(flow == false) {
         flow = true;
         flow_start_position = start_position;
+        flow_turn_position = 0;
         time = SDL_GetTicks();
     }
 }
