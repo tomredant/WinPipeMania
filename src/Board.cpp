@@ -43,7 +43,7 @@ void Board::mouseClick (int x, int y)
         // Get top of the pool
         *pipe = pool[0];
         rotatePool();
-        (*pipe)->StartFlow();
+        (*pipe)->StartFlow(FLOW_TOP);
     }
 }
 

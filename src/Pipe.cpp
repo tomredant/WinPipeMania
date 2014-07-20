@@ -1,5 +1,8 @@
 #include "Pipe.h"
 
+const int Pipe::pipe_size_middle = (PIPE_SIZE / 2);
+const int Pipe::pipe_size_middle_start = Pipe::pipe_size_middle - 1;
+
 Pipe::Pipe(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param, bool top_param, bool right_param, bool down_param, bool left_param)
 {
     init(sprite_param, alt_sprite_param, top_param, right_param, down_param, left_param);
@@ -25,7 +28,7 @@ void Pipe::init(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param, bool t
     down = down_param;
     left = left_param;
 
-    sprite_position.w = sprite_position.h = SIZE;
+    sprite_position.w = sprite_position.h = PIPE_SIZE;
 
     flow = false;
     flowed_pixels = time = 0;
@@ -35,81 +38,153 @@ void Pipe::init(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param, bool t
         sprite_position.x = 0;
         sprite_position.y = 0;
     } else if(top == true && right == true && down == true) {
-        sprite_position.x = SIZE * 4;
+        sprite_position.x = PIPE_SIZE * 4;
         sprite_position.y = 0;
     } else if(top == true && right == true && left == true) {
-        sprite_position.x = SIZE * 3;
+        sprite_position.x = PIPE_SIZE * 3;
         sprite_position.y = 0;
     } else if(top == true && down == true && left == true) {
-        sprite_position.x = SIZE * 2;
+        sprite_position.x = PIPE_SIZE * 2;
         sprite_position.y = 0;
     } else if(right == true && down == true && left == true) {
-        sprite_position.x = SIZE;
+        sprite_position.x = PIPE_SIZE;
         sprite_position.y = 0;
     } else if(top == true && right == true) {
-        sprite_position.x = SIZE;
-        sprite_position.y = SIZE;
+        sprite_position.x = PIPE_SIZE;
+        sprite_position.y = PIPE_SIZE;
     } else if(top == true && down == true) {
-        sprite_position.x = SIZE * 3;
-        sprite_position.y = SIZE;
+        sprite_position.x = PIPE_SIZE * 3;
+        sprite_position.y = PIPE_SIZE;
     } else if(top == true && left == true) {
-        sprite_position.x = SIZE * 2;
-        sprite_position.y = SIZE;
+        sprite_position.x = PIPE_SIZE * 2;
+        sprite_position.y = PIPE_SIZE;
     } else if(right == true && down == true) {
-        sprite_position.x = SIZE * 5;
+        sprite_position.x = PIPE_SIZE * 5;
         sprite_position.y = 0;
     } else if(right == true && left == true) {
-        sprite_position.x = SIZE * 4;
-        sprite_position.y = SIZE;
+        sprite_position.x = PIPE_SIZE * 4;
+        sprite_position.y = PIPE_SIZE;
     } else if(down == true && left == true) {
         sprite_position.x = 0;
-        sprite_position.y = SIZE;
+        sprite_position.y = PIPE_SIZE;
     } else if(top == true) {
-        sprite_position.x = SIZE * 2;
-        sprite_position.y = SIZE * 2;
+        sprite_position.x = PIPE_SIZE * 2;
+        sprite_position.y = PIPE_SIZE * 2;
     } else if(right == true) {
-        sprite_position.x = SIZE * 5;
-        sprite_position.y = SIZE;
+        sprite_position.x = PIPE_SIZE * 5;
+        sprite_position.y = PIPE_SIZE;
     } else if(down == true) {
-        sprite_position.x = SIZE;
-        sprite_position.y = SIZE * 2;
+        sprite_position.x = PIPE_SIZE;
+        sprite_position.y = PIPE_SIZE * 2;
     } else if(left == true) {
         sprite_position.x = 0;
-        sprite_position.y = SIZE * 2;
+        sprite_position.y = PIPE_SIZE * 2;
     } else {
-        sprite_position.x = SIZE * 5;
-        sprite_position.y = SIZE * 2;
+        sprite_position.x = PIPE_SIZE * 5;
+        sprite_position.y = PIPE_SIZE * 2;
     }
 }
 
 void Pipe::Draw(SDL_Surface* surface, SDL_Rect* position) {
-    SDL_Rect rect;
-    rect.x = position->x;
-    rect.y = position->y + 23;
-    rect.w = flowed_pixels;
-    rect.h = 2;
-
     // draws the pipe
     SDL_BlitSurface(alt_sprite, &sprite_position, surface, position);
 
-    // draws the pipe flow
-    SDL_FillRect(surface, &rect, SDL_MapRGB(surface->format, 255, 0, 0));
+    unsigned int rgb = SDL_MapRGB(surface->format, 255, 0, 0);
+
+    // first half flow
+    SDL_Rect rect = FirstFlowRect(position, flow_start_position);
+    SDL_FillRect(surface, &rect, rgb);
+
+    // second half flow
+    if(flowed_pixels >= PIPE_SIZE / 2) {
+        rect = LastFlowRect(position, flow_turn_position);
+        SDL_FillRect(surface, &rect, rgb);
+    }
 }
 
 void Pipe::Update() {
-  if(flowed_pixels < SIZE && flow == true) {
-    unsigned int current_time = SDL_GetTicks();
+  if(flowed_pixels < PIPE_SIZE && flow == true) {
+    int current_time = SDL_GetTicks();
 
     if(current_time > time + FLOW_SPEED) {
-      flowed_pixels += 1;
+      flowed_pixels += 2;
       time = current_time;
+    }
+
+    // determines the turn flow direction when it reaches the middle
+    if(flow_turn_position == 0 && flowed_pixels >= PIPE_SIZE / 2) {
+        // TODO calculate this based on the next connections
+        flow_turn_position = FLOW_RIGHT;
     }
   }
 }
 
-void Pipe::StartFlow() {
+void Pipe::StartFlow(int start_position) {
     if(flow == false) {
         flow = true;
+        flow_start_position = start_position;
         time = SDL_GetTicks();
     }
+}
+
+SDL_Rect Pipe::FirstFlowRect(SDL_Rect* position, unsigned int flow_start) {
+    SDL_Rect rect;
+
+    // makes it go only halfway
+    int max_flowed_pixels = flowed_pixels <= Pipe::pipe_size_middle ? flowed_pixels : Pipe::pipe_size_middle;
+
+    if(flow_start == FLOW_TOP) {
+        rect.x = position->x + Pipe::pipe_size_middle_start;
+        rect.y = position->y;
+        rect.w = FLOW_LENGTH;
+        rect.h = max_flowed_pixels;
+    } else if(flow_start == FLOW_RIGHT) {
+        rect.x = (position->x + PIPE_SIZE) - max_flowed_pixels;
+        rect.y = position->y + Pipe::pipe_size_middle_start;
+        rect.w = PIPE_SIZE - (PIPE_SIZE - max_flowed_pixels);
+        rect.h = FLOW_LENGTH;
+    } else if(flow_start == FLOW_DOWN) {
+        rect.x = position->x + Pipe::pipe_size_middle_start;
+        rect.y = (position->y + PIPE_SIZE) - max_flowed_pixels;
+        rect.w = FLOW_LENGTH;
+        rect.h = PIPE_SIZE - (PIPE_SIZE - max_flowed_pixels);
+    } else if(flow_start == FLOW_LEFT) {
+        rect.x = position->x;
+        rect.y = position->y + Pipe::pipe_size_middle_start;
+        rect.w = max_flowed_pixels;
+        rect.h = FLOW_LENGTH;
+    }
+
+    return rect;
+}
+
+SDL_Rect Pipe::LastFlowRect(SDL_Rect* position, unsigned int flow_end) {
+    SDL_Rect rect;
+
+    // makes it go only halfway
+    int max_flowed_pixels = flowed_pixels - Pipe::pipe_size_middle;
+
+    if(flow_end == FLOW_TOP) {
+        rect.x = position->x + Pipe::pipe_size_middle_start;
+        rect.y = (position->y + pipe_size_middle) - max_flowed_pixels;
+        rect.w = FLOW_LENGTH;
+        rect.h = PIPE_SIZE - (PIPE_SIZE - max_flowed_pixels);
+    } else if(flow_end == FLOW_RIGHT) {
+        rect.x = position->x + Pipe::pipe_size_middle;
+        rect.y = position->y + Pipe::pipe_size_middle_start;
+        rect.w = max_flowed_pixels;
+        rect.h = FLOW_LENGTH;
+    } else if(flow_end == FLOW_DOWN) {
+        rect.x = position->x + Pipe::pipe_size_middle_start;
+        rect.y = position->y + pipe_size_middle;
+        rect.w = FLOW_LENGTH;
+        rect.h = max_flowed_pixels;
+    } else if(flow_end == FLOW_LEFT) {
+        rect.x = (position->x + pipe_size_middle) - max_flowed_pixels;
+        rect.y = position->y + Pipe::pipe_size_middle_start;
+        rect.w = pipe_size_middle - (pipe_size_middle - max_flowed_pixels);
+        rect.h = FLOW_LENGTH;
+    }
+
+    return rect;
 }
