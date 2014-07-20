@@ -37,8 +37,12 @@ void Board::mouseClick (int x, int y)
         int column = (y - y_min) / slotSize;
         Pipe **pipe = &slots[line][column];
 
-        if (*pipe)
+        if (*pipe) {
+            if ((*pipe)->isBlocked())
+                return;
+
             delete *pipe;
+        }
 
         // Get top of the pool
         *pipe = pool[0];
