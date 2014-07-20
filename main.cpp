@@ -68,6 +68,8 @@ int main ( int argc, char** argv )
     bool done = false;
     while (!done)
     {
+        board.Update();
+
         // message processing loop
         SDL_Event event;
         while (SDL_PollEvent(&event))

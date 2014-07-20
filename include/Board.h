@@ -33,6 +33,9 @@ class Board
         /*! Get slot root position based on his line and column */
         SDL_Rect getSlotScreenPosition (int line, int column);
 
+        /*! Updates the board data */
+        void Update ();
+
         /*! Draw board and pipes on screen */
         void Draw ();
     protected:
