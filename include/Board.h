@@ -46,8 +46,14 @@ class Board
         Pipe *slots[BOARD_LINES][BOARD_COLUMNS];
         Pipe *pool[POOL_SIZE];
 
+        // the current pipe flowing
+        int current_pipe_line, current_pipe_column;
+
         // the time the game started
         int starting_time;
+
+        // flags if the flow has started
+        bool flow_started;
 
         static const int x_offset, y_offset;
         static const int slotSize;

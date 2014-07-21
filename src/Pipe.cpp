@@ -195,3 +195,11 @@ SDL_Rect Pipe::LastFlowRect(SDL_Rect* position, unsigned int flow_end) {
 
     return rect;
 }
+
+bool Pipe::isFlowFinished() {
+    return flowed_pixels == PIPE_SIZE;
+}
+
+int Pipe::getFlowTurnPosition() {
+    return flow_turn_position;
+}
