@@ -11,6 +11,10 @@
 #include <Board.h>
 #include <Pipe.h>
 
+#define FRAMES_PER_SECOND 25
+
+const int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
+
 int main ( int argc, char** argv )
 {
     /* seed pseudo random numbers generator */
@@ -66,6 +70,7 @@ int main ( int argc, char** argv )
 
     // program main loop
     bool done = false;
+    unsigned int sleep_time, ticks_now, next_game_tick = SDL_GetTicks();
     while (!done)
     {
         board.Update();
@@ -114,6 +119,15 @@ int main ( int argc, char** argv )
 
         // finally, update the screen :)
         SDL_Flip(screen);
+
+        // sleep until next frame
+        next_game_tick += SKIP_TICKS;
+        ticks_now = SDL_GetTicks();
+        sleep_time = ( next_game_tick > ticks_now ) ? next_game_tick - ticks_now : 0;
+        if (sleep_time >= 0)
+            SDL_Delay(sleep_time);
+        else
+            next_game_tick = SDL_GetTicks();
     } // end main loop
 
     // free loaded bitmap
