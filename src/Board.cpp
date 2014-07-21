@@ -1,8 +1,6 @@
 #include "Board.h"
 #include "Pipe.h"
 
-#define INITIAL_DELAY 3000
-
 const int Board::x_offset = 227;
 const int Board::y_offset = 35;
 const int Board::slotSize = 48;
@@ -18,6 +16,7 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1
     pipes_sprite2 = pipe2;
     starting_time = SDL_GetTicks();
     flow_started = false;
+    game_in_progress = true;
 
     for (int line = 0; line < lines; line++) {
         for (int column = 0; column < columns; column++) {
@@ -74,7 +73,14 @@ SDL_Rect Board::getSlotScreenPosition (int line, int column)
 }
 
 void Board::Update() {
-    // Updates pipes
+    if(game_in_progress) {
+        updatePipes();
+        updateStartingFlow();
+        updateNextPipe();
+    }
+}
+
+void Board::updatePipes() {
     for (int l = 0; l < lines; l++) {
         for (int c = 0; c < columns; c++) {
             if (slots[l][c] != NULL) {
@@ -82,18 +88,22 @@ void Board::Update() {
             }
         }
     }
+}
 
-    // Starts flowing after the setup time
+void Board::updateStartingFlow() {
     if (flow_started == false && SDL_GetTicks() - starting_time > INITIAL_DELAY) {
         if (slots[0][7] != NULL) {
             current_pipe_column = 0;
             current_pipe_line = 7;
             slots[current_pipe_column][current_pipe_line]->StartFlow(FLOW_LEFT);
             flow_started = true;
+        } else {
+            gameOver();
         }
     }
+}
 
-    // Starts flowing the next pipe
+void Board::updateNextPipe() {
     if (flow_started == true && slots[current_pipe_column][current_pipe_line]->isFlowFinished()) {
         int flow_direction = slots[current_pipe_column][current_pipe_line]->getFlowTurnPosition();
         int next_flow;
@@ -117,7 +127,13 @@ void Board::Update() {
                 break;
         }
 
-        slots[current_pipe_column][current_pipe_line]->StartFlow(next_flow);
+        if (((current_pipe_column >= BOARD_COLUMNS || current_pipe_column < 0) &&
+            (current_pipe_line >= BOARD_LINES || current_pipe_line < 0)) ||
+            slots[current_pipe_column][current_pipe_line] == NULL) {
+            gameOver();
+        } else {
+            slots[current_pipe_column][current_pipe_line]->StartFlow(next_flow);
+        }
     }
 }
 
@@ -149,4 +165,8 @@ void Board::Draw ()
 
     pos.y = POOL_TOP_Y;
     pool[0]->Draw(screen, &pos);
+}
+
+void Board::gameOver() {
+    game_in_progress = false;
 }

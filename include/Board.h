@@ -15,6 +15,8 @@
 #define POOL_TOP_x 944
 #define POOL_TOP_Y 312
 
+#define INITIAL_DELAY 3000
+
 class Board
 {
     public:
@@ -40,7 +42,6 @@ class Board
         void Draw ();
     protected:
     private:
-        void rotatePool (void);
         SDL_Surface *screen, *background, *pipes_sprite1, *pipes_sprite2;
         SDL_Rect *coordinates;
         Pipe *slots[BOARD_LINES][BOARD_COLUMNS];
@@ -48,6 +49,9 @@ class Board
 
         // the current pipe flowing
         int current_pipe_line, current_pipe_column;
+
+        // Flags if there is a game in progress
+        bool game_in_progress;
 
         // the time the game started
         int starting_time;
@@ -58,6 +62,17 @@ class Board
         static const int x_offset, y_offset;
         static const int slotSize;
         static const int lines, columns;
+
+        void rotatePool (void);
+
+        void updatePipes();
+        void updateStartingFlow();
+        void updateNextPipe();
+
+        /*
+            Game over logic.
+        */
+        void gameOver();
 };
 
 #endif // BOARD_H
