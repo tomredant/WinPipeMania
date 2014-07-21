@@ -45,6 +45,10 @@ class Board
         SDL_Rect *coordinates;
         Pipe *slots[BOARD_LINES][BOARD_COLUMNS];
         Pipe *pool[POOL_SIZE];
+
+        // the time the game started
+        int starting_time;
+
         static const int x_offset, y_offset;
         static const int slotSize;
         static const int lines, columns;

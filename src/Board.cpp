@@ -1,6 +1,8 @@
 #include "Board.h"
 #include "Pipe.h"
 
+#define INITIAL_DELAY 5000
+
 const int Board::x_offset = 227;
 const int Board::y_offset = 35;
 const int Board::slotSize = 48;
@@ -14,6 +16,8 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1
     background = back;
     pipes_sprite1 = pipe1;
     pipes_sprite2 = pipe2;
+
+    starting_time = SDL_GetTicks();
 
     for (int line = 0; line < lines; line++) {
         for (int column = 0; column < columns; column++) {
@@ -47,7 +51,6 @@ void Board::mouseClick (int x, int y)
         // Get top of the pool
         *pipe = pool[0];
         rotatePool();
-        (*pipe)->StartFlow(FLOW_TOP);
     }
 }
 
@@ -77,6 +80,13 @@ void Board::Update() {
             if (slots[l][c] != NULL) {
                 slots[l][c]->Update();
             }
+        }
+    }
+
+    // Starts flowing after the setup time
+    if (SDL_GetTicks() - starting_time > INITIAL_DELAY) {
+        if (slots[0][7] != NULL) {
+            slots[0][7]->StartFlow(FLOW_LEFT);
         }
     }
 }
