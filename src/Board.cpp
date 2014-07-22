@@ -72,6 +72,10 @@ SDL_Rect Board::getSlotScreenPosition (int line, int column)
     return pos;
 }
 
+Pipe* Board::getCurrentPipe() {
+    return slots[current_pipe_column][current_pipe_line];
+}
+
 void Board::Update() {
     if(game_in_progress) {
         updatePipes();
@@ -95,7 +99,7 @@ void Board::updateStartingFlow() {
         if (slots[INITIAL_COLUMN][INITIAL_LINE] != NULL) {
             current_pipe_column = INITIAL_COLUMN;
             current_pipe_line = INITIAL_LINE;
-            slots[current_pipe_column][current_pipe_line]->StartFlow(FLOW_LEFT);
+            getCurrentPipe()->StartFlow(FLOW_LEFT);
             flow_started = true;
         } else {
             gameOver();
@@ -104,8 +108,8 @@ void Board::updateStartingFlow() {
 }
 
 void Board::updateNextPipe() {
-    if (flow_started == true && slots[current_pipe_column][current_pipe_line]->isFlowFinished()) {
-        int flow_direction = slots[current_pipe_column][current_pipe_line]->getFlowTurnPosition();
+    if (flow_started == true && getCurrentPipe()->isFlowFinished()) {
+        int flow_direction = getCurrentPipe()->getFlowTurnPosition();
         int next_flow;
 
         switch(flow_direction) {
@@ -129,10 +133,10 @@ void Board::updateNextPipe() {
 
         if (((current_pipe_column >= BOARD_COLUMNS || current_pipe_column < 0) &&
             (current_pipe_line >= BOARD_LINES || current_pipe_line < 0)) ||
-            slots[current_pipe_column][current_pipe_line] == NULL) {
+            getCurrentPipe() == NULL) {
             gameOver();
         } else {
-            slots[current_pipe_column][current_pipe_line]->StartFlow(next_flow);
+            getCurrentPipe()->StartFlow(next_flow);
         }
     }
 }

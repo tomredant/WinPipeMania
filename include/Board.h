@@ -71,6 +71,8 @@ class Board
         void updateStartingFlow();
         void updateNextPipe();
 
+        Pipe* getCurrentPipe();
+
         /*
             Game over logic.
         */
