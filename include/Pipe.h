@@ -52,6 +52,9 @@ class Pipe
             int - the flow start position.
         */
         void StartFlow(int);
+
+        /*! Return false if pipe cannot be changed anymore */
+        bool isBlocked (void);
     protected:
     private:
         // the pipe sprite image

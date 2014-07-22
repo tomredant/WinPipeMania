@@ -119,6 +119,12 @@ void Pipe::Update() {
   }
 }
 
+bool Pipe::isBlocked (void)
+{
+    // if it has flow then its blocked
+    return flow;
+}
+
 void Pipe::StartFlow(int start_position) {
     if(flow == false) {
         flow = true;
