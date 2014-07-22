@@ -92,9 +92,9 @@ void Board::updatePipes() {
 
 void Board::updateStartingFlow() {
     if (flow_started == false && SDL_GetTicks() - starting_time > INITIAL_DELAY) {
-        if (slots[0][7] != NULL) {
-            current_pipe_column = 0;
-            current_pipe_line = 7;
+        if (slots[INITIAL_COLUMN][INITIAL_LINE] != NULL) {
+            current_pipe_column = INITIAL_COLUMN;
+            current_pipe_line = INITIAL_LINE;
             slots[current_pipe_column][current_pipe_line]->StartFlow(FLOW_LEFT);
             flow_started = true;
         } else {

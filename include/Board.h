@@ -16,6 +16,8 @@
 #define POOL_TOP_Y 312
 
 #define INITIAL_DELAY 3000
+#define INITIAL_COLUMN 0
+#define INITIAL_LINE   7
 
 class Board
 {
