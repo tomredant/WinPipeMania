@@ -14,6 +14,9 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1
     background = back;
     pipes_sprite1 = pipe1;
     pipes_sprite2 = pipe2;
+    starting_time = SDL_GetTicks();
+    flow_started = false;
+    game_in_progress = true;
 
     for (int line = 0; line < lines; line++) {
         for (int column = 0; column < columns; column++) {
@@ -47,7 +50,6 @@ void Board::mouseClick (int x, int y)
         // Get top of the pool
         *pipe = pool[0];
         rotatePool();
-        (*pipe)->StartFlow(FLOW_TOP);
     }
 }
 
@@ -70,13 +72,71 @@ SDL_Rect Board::getSlotScreenPosition (int line, int column)
     return pos;
 }
 
+Pipe* Board::getCurrentPipe() {
+    return slots[current_pipe_column][current_pipe_line];
+}
+
 void Board::Update() {
-    // Updates pipes
+    if(game_in_progress) {
+        updatePipes();
+        updateStartingFlow();
+        updateNextPipe();
+    }
+}
+
+void Board::updatePipes() {
     for (int l = 0; l < lines; l++) {
         for (int c = 0; c < columns; c++) {
             if (slots[l][c] != NULL) {
                 slots[l][c]->Update();
             }
+        }
+    }
+}
+
+void Board::updateStartingFlow() {
+    if (flow_started == false && SDL_GetTicks() - starting_time > INITIAL_DELAY) {
+        if (slots[INITIAL_COLUMN][INITIAL_LINE] != NULL) {
+            current_pipe_column = INITIAL_COLUMN;
+            current_pipe_line = INITIAL_LINE;
+            getCurrentPipe()->StartFlow(FLOW_LEFT);
+            flow_started = true;
+        } else {
+            gameOver();
+        }
+    }
+}
+
+void Board::updateNextPipe() {
+    if (flow_started == true && getCurrentPipe()->isFlowFinished()) {
+        int flow_direction = getCurrentPipe()->getFlowTurnPosition();
+        int next_flow;
+
+        switch(flow_direction) {
+            case FLOW_TOP:
+                current_pipe_line -= 1;
+                next_flow = FLOW_DOWN;
+                break;
+            case FLOW_RIGHT:
+                current_pipe_column += 1;
+                next_flow = FLOW_LEFT;
+                break;
+            case FLOW_DOWN:
+                current_pipe_line += 1;
+                next_flow = FLOW_TOP;
+                break;
+            case FLOW_LEFT:
+                current_pipe_column -= 1;
+                next_flow = FLOW_RIGHT;
+                break;
+        }
+
+        if (((current_pipe_column >= BOARD_COLUMNS || current_pipe_column < 0) &&
+            (current_pipe_line >= BOARD_LINES || current_pipe_line < 0)) ||
+            getCurrentPipe() == NULL) {
+            gameOver();
+        } else {
+            getCurrentPipe()->StartFlow(next_flow);
         }
     }
 }
@@ -109,4 +169,8 @@ void Board::Draw ()
 
     pos.y = POOL_TOP_Y;
     pool[0]->Draw(screen, &pos);
+}
+
+void Board::gameOver() {
+    game_in_progress = false;
 }

@@ -55,6 +55,16 @@ class Pipe
 
         /*! Return false if pipe cannot be changed anymore */
         bool isBlocked (void);
+
+        /*
+            Checks if the flow of this pipe has already finished.
+        */
+        bool isFlowFinished();
+
+        /*
+            Gets the flow turn position.
+        */
+        int getFlowTurnPosition();
     protected:
     private:
         // the pipe sprite image
