@@ -71,6 +71,11 @@ class Pipe
         */
         int getFlowTurnPosition();
 
+        /*
+            Sets the flow turn position for this pipe.
+        */
+        void setFlowTurnPosition(int);
+
     protected:
     private:
         // the pipe sprite image

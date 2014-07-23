@@ -110,12 +110,6 @@ void Pipe::Update() {
       flowed_pixels += 2;
       time = current_time;
     }
-
-    // determines the turn flow direction when it reaches the middle
-    if(flow_turn_position == 0 && flowed_pixels >= Pipe::pipe_size_middle_start) {
-        // TODO calculate this based on the next connections
-        flow_turn_position = FLOW_RIGHT;
-    }
   }
 }
 
@@ -209,4 +203,8 @@ bool Pipe::isFlowFinished() {
 
 int Pipe::getFlowTurnPosition() {
     return flow_turn_position;
+}
+
+void Pipe::setFlowTurnPosition(int direction) {
+    flow_turn_position = direction;
 }

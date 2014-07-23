@@ -142,7 +142,13 @@ void Board::updateNextPipe() {
         } else {
             getCurrentPipe()->StartFlow(next_flow);
         }
+    } else if(flow_started == true) {
+        getCurrentPipe()->setFlowTurnPosition(calculateNextFlowDirection());
     }
+}
+
+int Board::calculateNextFlowDirection() {
+    return FLOW_RIGHT;
 }
 
 void Board::Draw ()

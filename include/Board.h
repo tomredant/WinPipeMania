@@ -71,6 +71,11 @@ class Board
         void updateStartingFlow();
         void updateNextPipe();
 
+        /*
+            Calculates where the next flow direction should be.
+        */
+        int calculateNextFlowDirection();
+
         Pipe* getCurrentPipe();
 
         /*
