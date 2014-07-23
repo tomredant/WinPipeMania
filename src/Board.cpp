@@ -72,13 +72,44 @@ SDL_Rect Board::getSlotScreenPosition (int line, int column)
     return pos;
 }
 
-Pipe* Board::getCurrentPipe() {
-    if(current_pipe_column >= BOARD_COLUMNS || current_pipe_column < 0 ||
-       current_pipe_line >= BOARD_LINES || current_pipe_line < 0) {
+Pipe* Board::getPipe(int column, int line) {
+    if(column >= BOARD_COLUMNS || column < 0 ||
+       line >= BOARD_LINES || line < 0) {
        return NULL;
     } else {
-        return slots[current_pipe_column][current_pipe_line];
+        return slots[column][line];
     }
+}
+
+Pipe* Board::getCurrentPipe() {
+    return getPipe(current_pipe_column, current_pipe_line);
+}
+
+int* Board::getNextPipe(int direction) {
+    int positions[3];
+    positions[0] = current_pipe_column;
+    positions[1] = current_pipe_line;
+
+    switch(direction) {
+        case FLOW_TOP:
+            positions[1] -= 1;
+            positions[2] = FLOW_DOWN;
+            break;
+        case FLOW_RIGHT:
+            positions[0] += 1;
+            positions[2] = FLOW_LEFT;
+            break;
+        case FLOW_DOWN:
+            positions[1] += 1;
+            positions[2] = FLOW_TOP;
+            break;
+        case FLOW_LEFT:
+            positions[0] -= 1;
+            positions[2] = FLOW_RIGHT;
+            break;
+    };
+
+    return positions;
 }
 
 void Board::Update() {
@@ -117,24 +148,10 @@ void Board::updateNextPipe() {
         int flow_direction = getCurrentPipe()->getFlowTurnPosition();
         int next_flow;
 
-        switch(flow_direction) {
-            case FLOW_TOP:
-                current_pipe_line -= 1;
-                next_flow = FLOW_DOWN;
-                break;
-            case FLOW_RIGHT:
-                current_pipe_column += 1;
-                next_flow = FLOW_LEFT;
-                break;
-            case FLOW_DOWN:
-                current_pipe_line += 1;
-                next_flow = FLOW_TOP;
-                break;
-            case FLOW_LEFT:
-                current_pipe_column -= 1;
-                next_flow = FLOW_RIGHT;
-                break;
-        }
+        int* positions = getNextPipe(flow_direction);
+        current_pipe_column = positions[0];
+        current_pipe_line = positions[1];
+        next_flow = positions[2];
 
         // game over if has no next pipe or the next pipe does not have the next_flow entry
         if (getCurrentPipe() == NULL || !getCurrentPipe()->hasFlowEntry(next_flow)) {

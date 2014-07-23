@@ -76,7 +76,20 @@ class Board
         */
         int calculateNextFlowDirection();
 
+        /*
+            Gets the pipe for the given column/line..
+        */
+        Pipe* getPipe(int, int);
+
+        /*
+            Gets the current pipe.
+        */
         Pipe* getCurrentPipe();
+
+        /*
+            Gets the next pipe column/line/flow for the given direction.
+        */
+        int* getNextPipe(int);
 
         /*
             Game over logic.
