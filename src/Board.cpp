@@ -73,7 +73,12 @@ SDL_Rect Board::getSlotScreenPosition (int line, int column)
 }
 
 Pipe* Board::getCurrentPipe() {
-    return slots[current_pipe_column][current_pipe_line];
+    if(current_pipe_column >= BOARD_COLUMNS || current_pipe_column < 0 ||
+       current_pipe_line >= BOARD_LINES || current_pipe_line < 0) {
+       return NULL;
+    } else {
+        return slots[current_pipe_column][current_pipe_line];
+    }
 }
 
 void Board::Update() {
@@ -131,9 +136,7 @@ void Board::updateNextPipe() {
                 break;
         }
 
-        if (((current_pipe_column >= BOARD_COLUMNS || current_pipe_column < 0) &&
-            (current_pipe_line >= BOARD_LINES || current_pipe_line < 0)) ||
-            getCurrentPipe() == NULL) {
+        if (getCurrentPipe() == NULL) {
             gameOver();
         } else {
             getCurrentPipe()->StartFlow(next_flow);
