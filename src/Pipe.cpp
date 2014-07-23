@@ -201,6 +201,10 @@ bool Pipe::isFlowFinished() {
     return flowed_pixels == PIPE_SIZE;
 }
 
+int Pipe::getFlowStartPosition() {
+    return flow_start_position;
+}
+
 int Pipe::getFlowTurnPosition() {
     return flow_turn_position;
 }

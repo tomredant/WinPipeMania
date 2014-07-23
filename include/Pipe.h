@@ -67,6 +67,11 @@ class Pipe
         bool hasFlowEntry(int);
 
         /*
+            Gets the flow start position.
+        */
+        int getFlowStartPosition();
+
+        /*
             Gets the flow turn position.
         */
         int getFlowTurnPosition();

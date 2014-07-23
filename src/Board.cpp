@@ -160,12 +160,70 @@ void Board::updateNextPipe() {
             getCurrentPipe()->StartFlow(next_flow);
         }
     } else if(flow_started == true) {
-        getCurrentPipe()->setFlowTurnPosition(calculateNextFlowDirection());
+        int next_flow_direction = calculateNextFlowDirection();
+
+        if(next_flow_direction > 0) {
+            getCurrentPipe()->setFlowTurnPosition(calculateNextFlowDirection());
+        } else {
+            gameOver();
+        }
     }
 }
 
 int Board::calculateNextFlowDirection() {
-    return FLOW_RIGHT;
+    Pipe* pipe = getCurrentPipe();
+    Pipe* next_pipe;
+    int* positions;
+
+    // finds the first possible next pipe
+    if(pipe->hasFlowEntry(FLOW_TOP) && !pipe->getFlowStartPosition()) {
+        positions = getNextPipe(FLOW_TOP);
+        next_pipe = getPipe(positions[0], positions[1]);
+
+        if(next_pipe->hasFlowEntry(FLOW_DOWN)) {
+            return FLOW_TOP;
+        }
+    }
+
+    if(next_pipe == NULL && pipe->hasFlowEntry(FLOW_RIGHT) && !pipe->getFlowStartPosition()) {
+        positions = getNextPipe(FLOW_RIGHT);
+        next_pipe = getPipe(positions[0], positions[1]);
+
+        if(next_pipe->hasFlowEntry(FLOW_LEFT)) {
+            return FLOW_RIGHT;
+        }
+    }
+
+    if(next_pipe == NULL && pipe->hasFlowEntry(FLOW_DOWN) && !pipe->getFlowStartPosition()) {
+        positions = getNextPipe(FLOW_DOWN);
+        next_pipe = getPipe(positions[0], positions[1]);
+
+        if(next_pipe->hasFlowEntry(FLOW_TOP)) {
+            return FLOW_DOWN;
+        }
+    }
+
+    if(next_pipe == NULL && pipe->hasFlowEntry(FLOW_LEFT) && !pipe->getFlowStartPosition()) {
+        positions = getNextPipe(FLOW_LEFT);
+        next_pipe = getPipe(positions[0], positions[1]);
+
+        if(next_pipe->hasFlowEntry(FLOW_RIGHT)) {
+            return FLOW_LEFT;
+        }
+    }
+
+    // if couldn't find anything, turn to the first possible one
+    if(pipe->hasFlowEntry(FLOW_TOP)) {
+        return FLOW_TOP;
+    } else if(pipe->hasFlowEntry(FLOW_RIGHT)) {
+        return FLOW_RIGHT;
+    } else if(pipe->hasFlowEntry(FLOW_DOWN)) {
+        return FLOW_DOWN;
+    } else if(pipe->hasFlowEntry(FLOW_LEFT)) {
+        return FLOW_LEFT;
+    }
+
+    return 0;
 }
 
 void Board::Draw ()
