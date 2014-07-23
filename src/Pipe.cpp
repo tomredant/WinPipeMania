@@ -125,6 +125,13 @@ bool Pipe::isBlocked (void)
     return flow;
 }
 
+bool Pipe::hasFlowEntry(int entry) {
+    return (entry == FLOW_TOP && top) ||
+           (entry == FLOW_RIGHT && right) ||
+           (entry == FLOW_DOWN && down) ||
+           (entry == FLOW_LEFT && left);
+}
+
 void Pipe::StartFlow(int start_position) {
     if(flow == false) {
         flow = true;

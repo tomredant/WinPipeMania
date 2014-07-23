@@ -136,7 +136,8 @@ void Board::updateNextPipe() {
                 break;
         }
 
-        if (getCurrentPipe() == NULL) {
+        // game over if has no next pipe or the next pipe does not have the next_flow entry
+        if (getCurrentPipe() == NULL || !getCurrentPipe()->hasFlowEntry(next_flow)) {
             gameOver();
         } else {
             getCurrentPipe()->StartFlow(next_flow);

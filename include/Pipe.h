@@ -62,9 +62,15 @@ class Pipe
         bool isFlowFinished();
 
         /*
+            Checks if this pipe has a flow entry for the given parameter.
+        */
+        bool hasFlowEntry(int);
+
+        /*
             Gets the flow turn position.
         */
         int getFlowTurnPosition();
+
     protected:
     private:
         // the pipe sprite image
