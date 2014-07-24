@@ -1,7 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include <SDL.h>
+#include <SDL/SDL.h>
 #include "Pipe.h"
 
 #define BOARD_LINES 14
@@ -89,7 +89,7 @@ class Board
         /*
             Gets the next pipe column/line/flow for the given direction.
         */
-        int* getNextPipe(int);
+        void getNextPipe(const int direction, int *column, int *line, int *flow);
 
         /*
             Game over logic.

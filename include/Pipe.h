@@ -1,7 +1,7 @@
 #ifndef PIPE_H
 #define PIPE_H
 
-#include <SDL.h>
+#include <SDL/SDL.h>
 
 #define PIPE_SIZE 48
 #define FLOW_LENGTH 2

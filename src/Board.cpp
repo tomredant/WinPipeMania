@@ -85,31 +85,28 @@ Pipe* Board::getCurrentPipe() {
     return getPipe(current_pipe_column, current_pipe_line);
 }
 
-int* Board::getNextPipe(int direction) {
-    int positions[3];
-    positions[0] = current_pipe_column;
-    positions[1] = current_pipe_line;
+void Board::getNextPipe(const int direction, int *column, int *line, int *flow) {
+    *column = current_pipe_column;
+    *line = current_pipe_line;
 
     switch(direction) {
         case FLOW_TOP:
-            positions[1] -= 1;
-            positions[2] = FLOW_DOWN;
+            *line -= 1;
+            *flow = FLOW_DOWN;
             break;
         case FLOW_RIGHT:
-            positions[0] += 1;
-            positions[2] = FLOW_LEFT;
+            *column += 1;
+            *flow = FLOW_LEFT;
             break;
         case FLOW_DOWN:
-            positions[1] += 1;
-            positions[2] = FLOW_TOP;
+            *line += 1;
+            *flow = FLOW_TOP;
             break;
         case FLOW_LEFT:
-            positions[0] -= 1;
-            positions[2] = FLOW_RIGHT;
+            *column -= 1;
+            *flow = FLOW_RIGHT;
             break;
     };
-
-    return positions;
 }
 
 void Board::Update() {
@@ -147,11 +144,12 @@ void Board::updateNextPipe() {
     if (flow_started == true && getCurrentPipe()->isFlowFinished()) {
         int flow_direction = getCurrentPipe()->getFlowTurnPosition();
         int next_flow;
+        int column, line, flow;
 
-        int* positions = getNextPipe(flow_direction);
-        current_pipe_column = positions[0];
-        current_pipe_line = positions[1];
-        next_flow = positions[2];
+        getNextPipe(flow_direction, &column, &line, &flow);
+        current_pipe_column = column;
+        current_pipe_line = line;
+        next_flow = flow;
 
         // game over if has no next pipe or the next pipe does not have the next_flow entry
         if (getCurrentPipe() == NULL || !getCurrentPipe()->hasFlowEntry(next_flow)) {
@@ -173,12 +171,12 @@ void Board::updateNextPipe() {
 int Board::calculateNextFlowDirection() {
     Pipe* pipe = getCurrentPipe();
     Pipe* next_pipe;
-    int* positions;
+    int column, line, flow;
 
     // finds the first possible next pipe
     if(pipe->hasFlowEntry(FLOW_TOP) && !pipe->getFlowStartPosition()) {
-        positions = getNextPipe(FLOW_TOP);
-        next_pipe = getPipe(positions[0], positions[1]);
+        getNextPipe(FLOW_TOP, &column, &line, &flow);
+        next_pipe = getPipe(column, line);
 
         if(next_pipe->hasFlowEntry(FLOW_DOWN)) {
             return FLOW_TOP;
@@ -186,8 +184,8 @@ int Board::calculateNextFlowDirection() {
     }
 
     if(next_pipe == NULL && pipe->hasFlowEntry(FLOW_RIGHT) && !pipe->getFlowStartPosition()) {
-        positions = getNextPipe(FLOW_RIGHT);
-        next_pipe = getPipe(positions[0], positions[1]);
+        getNextPipe(FLOW_RIGHT, &column, &line, &flow);
+        next_pipe = getPipe(column, line);
 
         if(next_pipe->hasFlowEntry(FLOW_LEFT)) {
             return FLOW_RIGHT;
@@ -195,8 +193,8 @@ int Board::calculateNextFlowDirection() {
     }
 
     if(next_pipe == NULL && pipe->hasFlowEntry(FLOW_DOWN) && !pipe->getFlowStartPosition()) {
-        positions = getNextPipe(FLOW_DOWN);
-        next_pipe = getPipe(positions[0], positions[1]);
+        getNextPipe(FLOW_DOWN, &column, &line, &flow);
+        next_pipe = getPipe(column, line);
 
         if(next_pipe->hasFlowEntry(FLOW_TOP)) {
             return FLOW_DOWN;
@@ -204,8 +202,8 @@ int Board::calculateNextFlowDirection() {
     }
 
     if(next_pipe == NULL && pipe->hasFlowEntry(FLOW_LEFT) && !pipe->getFlowStartPosition()) {
-        positions = getNextPipe(FLOW_LEFT);
-        next_pipe = getPipe(positions[0], positions[1]);
+        getNextPipe(FLOW_LEFT, &column, &line, &flow);
+        next_pipe = getPipe(column, line);
 
         if(next_pipe->hasFlowEntry(FLOW_RIGHT)) {
             return FLOW_LEFT;
