@@ -10,10 +10,22 @@ Pipe::Pipe(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param, bool top_pa
 
 Pipe::Pipe(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param)
 {
+    int sum;
+
     bool t = rand() & 0x1;
     bool r = rand() & 0x1;
     bool d = rand() & 0x1;
     bool l = rand() & 0x1;
+
+    do {
+        t = rand() & 0x1;
+        r = rand() & 0x1;
+        d = rand() & 0x1;
+        l = rand() & 0x1;
+
+        sum = t + r + d + l;
+    } while (sum != 2);
+
     init(sprite_param, alt_sprite_param, t, r, d, l);
 }
 
