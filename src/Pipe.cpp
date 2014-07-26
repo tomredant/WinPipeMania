@@ -1,4 +1,5 @@
 #include "Pipe.h"
+#include "Log.h"
 
 const int Pipe::pipe_size_middle = (PIPE_SIZE / 2);
 const int Pipe::pipe_size_middle_start = Pipe::pipe_size_middle - 1;
@@ -21,7 +22,6 @@ void Pipe::init(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param, bool t
 {
     sprite = sprite_param;
     alt_sprite = alt_sprite_param;
-
 
     top = top_param;
     right = right_param;
@@ -83,6 +83,8 @@ void Pipe::init(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param, bool t
         sprite_position.x = PIPE_SIZE * 5;
         sprite_position.y = PIPE_SIZE * 2;
     }
+
+    Log().Get(logDEBUG) << "Created a new Pipe: top " << top << " down " << down << " left " << left << " right " << right;
 }
 
 void Pipe::Draw(SDL_Surface* surface, SDL_Rect* position) {

@@ -1,5 +1,6 @@
 #include "Board.h"
 #include "Pipe.h"
+#include "Log.h"
 
 const int Board::x_offset = 227;
 const int Board::y_offset = 35;
@@ -158,10 +159,9 @@ void Board::Draw ()
     }
 
     // Draw pool pipes
-    SDL_Rect pos = {
-        .x = POOL_OFFSET_X,
-        .y = POOL_OFFSET_Y,
-    };
+    SDL_Rect pos;
+    pos.x = POOL_OFFSET_X;
+    pos.y = POOL_OFFSET_Y;
 
     for (int p = POOL_SIZE - 1; p > 0; p--, pos.y += POOL_SPACING) {
         pool[p]->Draw(screen, &pos);
@@ -172,5 +172,6 @@ void Board::Draw ()
 }
 
 void Board::gameOver() {
+    Log().Get(logDEBUG) << "Game over !";
     game_in_progress = false;
 }

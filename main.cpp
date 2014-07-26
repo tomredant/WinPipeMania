@@ -10,6 +10,7 @@
 #include <SDL/SDL_image.h>
 #include <Board.h>
 #include <Pipe.h>
+#include <Log.h>
 
 #define FRAMES_PER_SECOND 25
 
@@ -67,6 +68,8 @@ int main ( int argc, char** argv )
     dstrect.y = (screen->h - background->h) / 2;
 
     Board board = Board(screen, &dstrect, background, pipes_sprite, pipes_sprite_2);
+
+    Log().Get(logDEBUG) << "Game started !";
 
     // program main loop
     bool done = false;
