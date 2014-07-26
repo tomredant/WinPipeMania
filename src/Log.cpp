@@ -3,6 +3,13 @@
 #include <ctime>
 #include <stdio.h>
 
+TLogLevel Log::reportingLevel = logDEBUG;
+
+TLogLevel Log::getReportingLevel()
+{
+    return reportingLevel;
+}
+
 std::string Log::toString (TLogLevel level)
 {
     std::string s("UNKNOWN");
@@ -33,27 +40,29 @@ std::string Log::nowTime ()
     return s;
 }
 
-
 std::ostringstream& Log::Get (TLogLevel level)
 {
    os << "- " << nowTime();
    os << " " << toString(level) << ": ";
-   os << std::string(level > logDEBUG ? 0 : level - logDEBUG, '\t');
- //  messageLevel = level;
+   //os << std::string(level > logDEBUG ? 0 : level - logDEBUG, '\t');
+   os << __FILE__ << ":" << __LINE__ << ": ";
    return os;
 }
 
 Log::Log ()
 {
-    //
+    // Change to filter out log messages
+    reportingLevel = logDEBUG;
 }
 
 Log::~Log ()
 {
-//   if (messageLevel >= Log::ReportingLevel())
-   {
-      os << std::endl;
-      fprintf(stderr, "%s", os.str().c_str());
-      fflush(stderr);
-   }
+#if 1 // Set to 1 to output logs on stderr and 0 to send logs to file
+    FILE* pStream = stderr;
+#else
+    FILE* pStream = fopen("pipemania.log", "a");
+#endif
+    os << std::endl;
+    fprintf(pStream, "%s", os.str().c_str());
+    fflush(pStream);
 }

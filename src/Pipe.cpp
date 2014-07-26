@@ -84,7 +84,7 @@ void Pipe::init(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param, bool t
         sprite_position.y = PIPE_SIZE * 2;
     }
 
-    Log().Get(logDEBUG) << "Created a new Pipe: top " << top << " down " << down << " left " << left << " right " << right;
+    LOG(logDEBUG) << "Created a new Pipe: top " << top << " down " << down << " left " << left << " right " << right;
 }
 
 void Pipe::Draw(SDL_Surface* surface, SDL_Rect* position) {

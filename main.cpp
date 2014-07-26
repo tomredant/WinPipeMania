@@ -10,7 +10,7 @@
 #include <SDL/SDL_image.h>
 #include <Board.h>
 #include <Pipe.h>
-#include <Log.h>
+#include "Log.h"
 
 #define FRAMES_PER_SECOND 25
 
@@ -67,13 +67,13 @@ int main ( int argc, char** argv )
     dstrect.x = (screen->w - background->w) / 2;
     dstrect.y = (screen->h - background->h) / 2;
 
-    Board board = Board(screen, &dstrect, background, pipes_sprite, pipes_sprite_2);
+    LOG(logINFO) << "Game started !";
 
-    Log().Get(logDEBUG) << "Game started !";
+    Board board = Board(screen, &dstrect, background, pipes_sprite, pipes_sprite_2);
 
     // program main loop
     bool done = false;
-    unsigned int sleep_time, ticks_now, next_game_tick = SDL_GetTicks();
+    unsigned int ticks_now, next_game_tick = SDL_GetTicks();
     while (!done)
     {
         board.Update();
@@ -126,11 +126,7 @@ int main ( int argc, char** argv )
         // sleep until next frame
         next_game_tick += SKIP_TICKS;
         ticks_now = SDL_GetTicks();
-        sleep_time = ( next_game_tick > ticks_now ) ? next_game_tick - ticks_now : 0;
-        if (sleep_time >= 0)
-            SDL_Delay(sleep_time);
-        else
-            next_game_tick = SDL_GetTicks();
+        SDL_Delay(( next_game_tick > ticks_now ) ? next_game_tick - ticks_now : 0);
     } // end main loop
 
     // free loaded bitmap

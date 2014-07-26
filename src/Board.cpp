@@ -172,6 +172,6 @@ void Board::Draw ()
 }
 
 void Board::gameOver() {
-    Log().Get(logDEBUG) << "Game over !";
+    LOG(logINFO) << "Game over !";
     game_in_progress = false;
 }
