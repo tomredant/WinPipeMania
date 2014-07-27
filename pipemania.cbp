@@ -29,6 +29,20 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Target title="Windows">
+				<Option output="pipemania" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add directory="C:/SDL/include" />
+					<Add directory="include" />
+				</Compiler>
+				<Linker>
+					<Add option="-lmingw32 -lSDLmain -lSDL" />
+					<Add directory="C:/SDL/lib" />
+					<Add directory="C:/SDL/bin" />
+				</Linker>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
@@ -38,20 +52,33 @@
 			<Add option="`sdl-config --libs`" />
 			<Add option="-lSDL_image" />
 		</Linker>
-		<Unit filename="README.md" />
-		<Unit filename="background.png" />
+		<Unit filename="README.md">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="background.png">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
 		<Unit filename="include/Board.h" />
 		<Unit filename="include/Log.h" />
 		<Unit filename="include/Pipe.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="pipes.png" />
-		<Unit filename="pipes2.png" />
+		<Unit filename="pipes.png">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="pipes2.png">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
 		<Unit filename="src/Board.cpp" />
 		<Unit filename="src/Log.cpp" />
 		<Unit filename="src/Pipe.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
