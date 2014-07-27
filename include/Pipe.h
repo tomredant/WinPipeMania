@@ -1,7 +1,7 @@
 #ifndef PIPE_H
 #define PIPE_H
 
-#include <SDL.h>
+#include <SDL/SDL.h>
 
 #define PIPE_SIZE 48
 #define FLOW_LENGTH 2
@@ -62,9 +62,25 @@ class Pipe
         bool isFlowFinished();
 
         /*
+            Checks if this pipe has a flow entry for the given parameter.
+        */
+        bool hasFlowEntry(int);
+
+        /*
+            Gets the flow start position.
+        */
+        int getFlowStartPosition();
+
+        /*
             Gets the flow turn position.
         */
         int getFlowTurnPosition();
+
+        /*
+            Sets the flow turn position for this pipe.
+        */
+        void setFlowTurnPosition(int);
+
     protected:
     private:
         // the pipe sprite image

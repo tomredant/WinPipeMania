@@ -10,10 +10,22 @@ Pipe::Pipe(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param, bool top_pa
 
 Pipe::Pipe(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param)
 {
+    int sum;
+
     bool t = rand() & 0x1;
     bool r = rand() & 0x1;
     bool d = rand() & 0x1;
     bool l = rand() & 0x1;
+
+    do {
+        t = rand() & 0x1;
+        r = rand() & 0x1;
+        d = rand() & 0x1;
+        l = rand() & 0x1;
+
+        sum = t + r + d + l;
+    } while (sum != 2);
+
     init(sprite_param, alt_sprite_param, t, r, d, l);
 }
 
@@ -110,12 +122,6 @@ void Pipe::Update() {
       flowed_pixels += 2;
       time = current_time;
     }
-
-    // determines the turn flow direction when it reaches the middle
-    if(flow_turn_position == 0 && flowed_pixels >= Pipe::pipe_size_middle_start) {
-        // TODO calculate this based on the next connections
-        flow_turn_position = FLOW_RIGHT;
-    }
   }
 }
 
@@ -123,6 +129,13 @@ bool Pipe::isBlocked (void)
 {
     // if it has flow then its blocked
     return flow;
+}
+
+bool Pipe::hasFlowEntry(int entry) {
+    return (entry == FLOW_TOP && top) ||
+           (entry == FLOW_RIGHT && right) ||
+           (entry == FLOW_DOWN && down) ||
+           (entry == FLOW_LEFT && left);
 }
 
 void Pipe::StartFlow(int start_position) {
@@ -200,6 +213,14 @@ bool Pipe::isFlowFinished() {
     return flowed_pixels == PIPE_SIZE;
 }
 
+int Pipe::getFlowStartPosition() {
+    return flow_start_position;
+}
+
 int Pipe::getFlowTurnPosition() {
     return flow_turn_position;
+}
+
+void Pipe::setFlowTurnPosition(int direction) {
+    flow_turn_position = direction;
 }
