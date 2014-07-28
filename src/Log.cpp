@@ -34,18 +34,28 @@ std::string Log::toString (TLogLevel level)
 
 std::string Log::nowTime ()
 {
-    time_t now = time(0);
-    tm* localtm = localtime(&now);
-    std::string s(asctime(localtm));
-    return s;
+    time_t rawtime;
+    struct tm * timeinfo;
+    char buffer[80];
+
+    time (&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    strftime(buffer, sizeof(buffer), "%d-%m-%Y %I:%M:%S", timeinfo);
+    std::string str(buffer);
+
+    return str;
 }
 
 std::ostringstream& Log::Get (TLogLevel level)
 {
    os << "- " << nowTime();
    os << " " << toString(level) << ": ";
-   //os << std::string(level > logDEBUG ? 0 : level - logDEBUG, '\t');
+
+#if 0 // Activate to show filename:linenumber
    os << __FILE__ << ":" << __LINE__ << ": ";
+#endif
+
    return os;
 }
 
