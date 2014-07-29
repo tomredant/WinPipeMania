@@ -1,4 +1,6 @@
 bin/*
 obj/*
+*.o
+pipemania.log
 pipemania.layout
 pipemania.depend
