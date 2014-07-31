@@ -105,14 +105,17 @@ void Pipe::Draw(SDL_Surface* surface, SDL_Rect* position) {
 
     unsigned int rgb = SDL_MapRGB(surface->format, 255, 0, 0);
 
-    // first half flow
-    SDL_Rect rect = FirstFlowRect(position, flow_start_position);
-    SDL_FillRect(surface, &rect, rgb);
 
-    // second half flow
-    if(flowed_pixels >= PIPE_SIZE / 2) {
-        rect = LastFlowRect(position, flow_turn_position);
+    if (flow) {
+        // first half flow
+        SDL_Rect rect = FirstFlowRect(position, flow_start_position);
         SDL_FillRect(surface, &rect, rgb);
+
+        // second half flow
+        if (flowed_pixels >= PIPE_SIZE / 2) {
+            rect = LastFlowRect(position, flow_turn_position);
+            SDL_FillRect(surface, &rect, rgb);
+        }
     }
 }
 
@@ -152,6 +155,8 @@ void Pipe::StartFlow(int start_position) {
 SDL_Rect Pipe::FirstFlowRect(SDL_Rect* position, unsigned int flow_start) {
     SDL_Rect rect;
 
+    rect.x = rect.y = rect.w = rect.h = 0;
+
     // makes it go only halfway
     int max_flowed_pixels = flowed_pixels <= Pipe::pipe_size_middle ? flowed_pixels : Pipe::pipe_size_middle;
 
@@ -182,6 +187,8 @@ SDL_Rect Pipe::FirstFlowRect(SDL_Rect* position, unsigned int flow_start) {
 
 SDL_Rect Pipe::LastFlowRect(SDL_Rect* position, unsigned int flow_end) {
     SDL_Rect rect;
+
+    rect.x = rect.y = rect.w = rect.h = 0;
 
     // makes it go only halfway
     int max_flowed_pixels = flowed_pixels - Pipe::pipe_size_middle;
