@@ -162,7 +162,7 @@ void Board::updateNextPipe() {
         int next_flow_direction = calculateNextFlowDirection();
 
         if(next_flow_direction > 0) {
-            getCurrentPipe()->setFlowTurnPosition(calculateNextFlowDirection());
+            getCurrentPipe()->setFlowTurnPosition(next_flow_direction);
         } else {
             gameOver();
         }
@@ -175,7 +175,7 @@ int Board::calculateNextFlowDirection() {
     int column, line, flow;
 
     // finds the first possible next pipe
-    if(pipe->hasFlowEntry(FLOW_TOP) && !pipe->getFlowStartPosition()) {
+    if (pipe->hasFlowEntry(FLOW_TOP) && pipe->getFlowStartPosition() != FLOW_TOP) {
         getNextPipe(FLOW_TOP, &column, &line, &flow);
         next_pipe = getPipe(column, line);
 
@@ -184,7 +184,7 @@ int Board::calculateNextFlowDirection() {
         }
     }
 
-    if(next_pipe == NULL && pipe->hasFlowEntry(FLOW_RIGHT) && !pipe->getFlowStartPosition()) {
+    if (next_pipe == NULL && pipe->hasFlowEntry(FLOW_RIGHT) && pipe->getFlowStartPosition() != FLOW_RIGHT) {
         getNextPipe(FLOW_RIGHT, &column, &line, &flow);
         next_pipe = getPipe(column, line);
 
@@ -193,7 +193,7 @@ int Board::calculateNextFlowDirection() {
         }
     }
 
-    if(next_pipe == NULL && pipe->hasFlowEntry(FLOW_DOWN) && !pipe->getFlowStartPosition()) {
+    if (next_pipe == NULL && pipe->hasFlowEntry(FLOW_DOWN) && pipe->getFlowStartPosition() != FLOW_DOWN) {
         getNextPipe(FLOW_DOWN, &column, &line, &flow);
         next_pipe = getPipe(column, line);
 
@@ -202,7 +202,7 @@ int Board::calculateNextFlowDirection() {
         }
     }
 
-    if(next_pipe == NULL && pipe->hasFlowEntry(FLOW_LEFT) && !pipe->getFlowStartPosition()) {
+    if (next_pipe == NULL && pipe->hasFlowEntry(FLOW_LEFT) && pipe->getFlowStartPosition() != FLOW_LEFT) {
         getNextPipe(FLOW_LEFT, &column, &line, &flow);
         next_pipe = getPipe(column, line);
 
@@ -212,13 +212,13 @@ int Board::calculateNextFlowDirection() {
     }
 
     // if couldn't find anything, turn to the first possible one
-    if(pipe->hasFlowEntry(FLOW_TOP)) {
+    if(pipe->hasFlowEntry(FLOW_TOP) && pipe->getFlowStartPosition() != FLOW_TOP) {
         return FLOW_TOP;
-    } else if(pipe->hasFlowEntry(FLOW_RIGHT)) {
+    } else if(pipe->hasFlowEntry(FLOW_RIGHT) && pipe->getFlowStartPosition() != FLOW_RIGHT) {
         return FLOW_RIGHT;
-    } else if(pipe->hasFlowEntry(FLOW_DOWN)) {
+    } else if(pipe->hasFlowEntry(FLOW_DOWN) && pipe->getFlowStartPosition() != FLOW_DOWN) {
         return FLOW_DOWN;
-    } else if(pipe->hasFlowEntry(FLOW_LEFT)) {
+    } else if(pipe->hasFlowEntry(FLOW_LEFT) && pipe->getFlowStartPosition() != FLOW_LEFT) {
         return FLOW_LEFT;
     }
 
