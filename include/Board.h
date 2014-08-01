@@ -89,7 +89,7 @@ class Board
         /*
             Gets the next pipe column/line/flow for the given direction.
         */
-        void getNextPipe(const int direction, int *column, int *line, int *flow);
+        Pipe* getNextPipe(const int direction, int *column, int *line, int *flow);
 
         /*
             Game over logic.
