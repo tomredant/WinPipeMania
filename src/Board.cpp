@@ -8,13 +8,14 @@ const int Board::slotSize = 48;
 const int Board::lines = BOARD_LINES;
 const int Board::columns = BOARD_COLUMNS;
 
-Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1, SDL_Surface* pipe2)
+Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1, SDL_Surface* pipe2, TTF_Font *f)
 {
     screen = s;
     coordinates = c;
     background = back;
     pipes_sprite1 = pipe1;
     pipes_sprite2 = pipe2;
+    font = f;
     starting_time = SDL_GetTicks();
     flow_started = false;
     game_in_progress = true;
@@ -28,6 +29,8 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1
     for (int p = 0; p < POOL_SIZE; p++) {
         pool[p] = new Pipe(pipes_sprite1, pipes_sprite2);
     }
+
+    LOG(logDEBUG) << "Created Board";
 }
 
 void Board::mouseClick (int x, int y)
@@ -223,6 +226,36 @@ int Board::calculateNextFlowDirection() {
     return 0;
 }
 
+void Board::drawText (const char *text, SDL_Color color, int x, int y, SDL_Surface *screen)
+{
+    SDL_Rect rect = { x, y, 0, 0 };
+    SDL_Surface *TTF_Message = TTF_RenderText_Solid (font, text, color);
+
+    if (TTF_Message) {
+        if (SDL_BlitSurface(TTF_Message, NULL, screen, &rect))
+            LOG(logERROR) << "Could not write text: " << TTF_GetError() << "";
+    }
+    else {
+        LOG(logERROR) << "Could not write text: " << TTF_GetError() << "";
+    }
+
+    SDL_FreeSurface(TTF_Message);
+}
+
+void Board::drawCronometer ()
+{
+    SDL_Color color = { 0xFF }; // red text
+    std::ostringstream out;
+    int time_left = starting_time - SDL_GetTicks() + INITIAL_DELAY;
+
+    if (time_left < 0)
+        time_left = 0;
+
+    out << "0:0" << time_left / 1000;
+
+    drawText(out.str().c_str(), color, CRON_OFFSET_X, CRON_OFFSET_Y, screen);
+}
+
 void Board::Draw ()
 {
     // Draw background
@@ -251,6 +284,9 @@ void Board::Draw ()
 
     pos.y = POOL_TOP_Y;
     pool[0]->Draw(screen, &pos, false);
+
+    // Draw cronometer
+    drawCronometer();
 }
 
 bool Board::isPipeConnected(int col, int line) {
