@@ -2,7 +2,7 @@
 #define BOARD_H
 
 #include <SDL/SDL.h>
-#include "Pipe.h"
+#include <Pipe.h>
 
 #define BOARD_LINES 14
 #define BOARD_COLUMNS 14
