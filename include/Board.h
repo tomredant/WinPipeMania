@@ -92,6 +92,14 @@ class Board
         Pipe* getNextPipe(const int direction, int *column, int *line, int *flow);
 
         /*
+            Checks if the pipe is connected to another pipe.
+
+            int - the pipe col
+            int - the pipe line
+        */
+        bool isPipeConnected(int, int);
+
+        /*
             Game over logic.
         */
         void gameOver();
