@@ -51,6 +51,7 @@
 		<Linker>
 			<Add option="`sdl-config --libs`" />
 			<Add option="-lSDL_image" />
+			<Add option="-lSDL_ttf" />
 		</Linker>
 		<Unit filename="README.md">
 			<Option target="Debug" />
