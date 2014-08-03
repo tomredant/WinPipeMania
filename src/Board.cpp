@@ -86,7 +86,7 @@ Pipe* Board::getCurrentPipe() {
     return getPipe(current_pipe_column, current_pipe_line);
 }
 
-void Board::getNextPipe(const int direction, int *column, int *line, int *flow) {
+Pipe* Board::getNextPipe(const int direction, int *column, int *line, int *flow) {
     *column = current_pipe_column;
     *line = current_pipe_line;
 
@@ -108,6 +108,8 @@ void Board::getNextPipe(const int direction, int *column, int *line, int *flow) 
             *flow = FLOW_RIGHT;
             break;
     };
+
+    return getPipe(*column, *line);
 }
 
 void Board::Update() {
@@ -162,7 +164,7 @@ void Board::updateNextPipe() {
         int next_flow_direction = calculateNextFlowDirection();
 
         if(next_flow_direction > 0) {
-            getCurrentPipe()->setFlowTurnPosition(calculateNextFlowDirection());
+            getCurrentPipe()->setFlowTurnPosition(next_flow_direction);
         } else {
             gameOver();
         }
@@ -175,50 +177,46 @@ int Board::calculateNextFlowDirection() {
     int column, line, flow;
 
     // finds the first possible next pipe
-    if(pipe->hasFlowEntry(FLOW_TOP) && !pipe->getFlowStartPosition()) {
-        getNextPipe(FLOW_TOP, &column, &line, &flow);
-        next_pipe = getPipe(column, line);
+    if (pipe->hasFlowEntry(FLOW_TOP) && pipe->getFlowStartPosition() != FLOW_TOP) {
+        next_pipe = getNextPipe(FLOW_TOP, &column, &line, &flow);
 
-        if(next_pipe->hasFlowEntry(FLOW_DOWN)) {
+        if(next_pipe && next_pipe->hasFlowEntry(FLOW_DOWN)) {
             return FLOW_TOP;
         }
     }
 
-    if(next_pipe == NULL && pipe->hasFlowEntry(FLOW_RIGHT) && !pipe->getFlowStartPosition()) {
-        getNextPipe(FLOW_RIGHT, &column, &line, &flow);
-        next_pipe = getPipe(column, line);
+    if (next_pipe == NULL && pipe->hasFlowEntry(FLOW_RIGHT) && pipe->getFlowStartPosition() != FLOW_RIGHT) {
+        next_pipe = getNextPipe(FLOW_RIGHT, &column, &line, &flow);
 
-        if(next_pipe->hasFlowEntry(FLOW_LEFT)) {
+        if(next_pipe && next_pipe->hasFlowEntry(FLOW_LEFT)) {
             return FLOW_RIGHT;
         }
     }
 
-    if(next_pipe == NULL && pipe->hasFlowEntry(FLOW_DOWN) && !pipe->getFlowStartPosition()) {
-        getNextPipe(FLOW_DOWN, &column, &line, &flow);
-        next_pipe = getPipe(column, line);
+    if (next_pipe == NULL && pipe->hasFlowEntry(FLOW_DOWN) && pipe->getFlowStartPosition() != FLOW_DOWN) {
+        next_pipe = getNextPipe(FLOW_DOWN, &column, &line, &flow);
 
-        if(next_pipe->hasFlowEntry(FLOW_TOP)) {
+        if(next_pipe && next_pipe->hasFlowEntry(FLOW_TOP)) {
             return FLOW_DOWN;
         }
     }
 
-    if(next_pipe == NULL && pipe->hasFlowEntry(FLOW_LEFT) && !pipe->getFlowStartPosition()) {
-        getNextPipe(FLOW_LEFT, &column, &line, &flow);
-        next_pipe = getPipe(column, line);
+    if (next_pipe == NULL && pipe->hasFlowEntry(FLOW_LEFT) && pipe->getFlowStartPosition() != FLOW_LEFT) {
+        next_pipe = getNextPipe(FLOW_LEFT, &column, &line, &flow);
 
-        if(next_pipe->hasFlowEntry(FLOW_RIGHT)) {
+        if(next_pipe && next_pipe->hasFlowEntry(FLOW_RIGHT)) {
             return FLOW_LEFT;
         }
     }
 
     // if couldn't find anything, turn to the first possible one
-    if(pipe->hasFlowEntry(FLOW_TOP)) {
+    if(pipe->hasFlowEntry(FLOW_TOP) && pipe->getFlowStartPosition() != FLOW_TOP) {
         return FLOW_TOP;
-    } else if(pipe->hasFlowEntry(FLOW_RIGHT)) {
+    } else if(pipe->hasFlowEntry(FLOW_RIGHT) && pipe->getFlowStartPosition() != FLOW_RIGHT) {
         return FLOW_RIGHT;
-    } else if(pipe->hasFlowEntry(FLOW_DOWN)) {
+    } else if(pipe->hasFlowEntry(FLOW_DOWN) && pipe->getFlowStartPosition() != FLOW_DOWN) {
         return FLOW_DOWN;
-    } else if(pipe->hasFlowEntry(FLOW_LEFT)) {
+    } else if(pipe->hasFlowEntry(FLOW_LEFT) && pipe->getFlowStartPosition() != FLOW_LEFT) {
         return FLOW_LEFT;
     }
 
