@@ -3,7 +3,7 @@
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
-#include <Pipe.h>
+#include "Pipe.h"
 
 #define FONT_PATH "batmfa__.ttf"
 

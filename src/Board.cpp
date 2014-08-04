@@ -1,7 +1,7 @@
 #include <iomanip>
-#include <Board.h>
-#include <Pipe.h>
-#include <Log.h>
+#include "Board.h"
+#include "Pipe.h"
+#include "Log.h"
 
 const int Board::x_offset = 227;
 const int Board::y_offset = 35;
