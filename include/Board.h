@@ -2,7 +2,7 @@
 #define BOARD_H
 
 #include <SDL/SDL.h>
-#include "Pipe.h"
+#include <Pipe.h>
 
 #define BOARD_LINES 14
 #define BOARD_COLUMNS 14
@@ -90,6 +90,14 @@ class Board
             Gets the next pipe column/line/flow for the given direction.
         */
         Pipe* getNextPipe(const int direction, int *column, int *line, int *flow);
+
+        /*
+            Checks if the pipe is connected to another pipe.
+
+            int - the pipe col
+            int - the pipe line
+        */
+        bool isPipeConnected(int, int);
 
         /*
             Game over logic.

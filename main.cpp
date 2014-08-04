@@ -10,7 +10,7 @@
 #include <SDL/SDL_image.h>
 #include <Board.h>
 #include <Pipe.h>
-#include "Log.h"
+#include <Log.h>
 
 #define FRAMES_PER_SECOND 25
 

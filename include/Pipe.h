@@ -38,8 +38,9 @@ class Pipe
 
             SDL_Surface* - the surface to draw this into
             SDL_Rect* - the coordinates to draw this into
+            bool - is this pipe connected to another pipe?
         */
-        void Draw(SDL_Surface*, SDL_Rect*);
+        void Draw(SDL_Surface*, SDL_Rect*, bool);
 
         /*
             Updates the pipe draw data.

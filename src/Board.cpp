@@ -1,6 +1,6 @@
-#include "Board.h"
-#include "Pipe.h"
-#include "Log.h"
+#include <Board.h>
+#include <Pipe.h>
+#include <Log.h>
 
 const int Board::x_offset = 227;
 const int Board::y_offset = 35;
@@ -234,7 +234,8 @@ void Board::Draw ()
             // if != NULL we have a pipe to draw
             if (slots[l][c] != NULL) {
                 SDL_Rect pos = getSlotScreenPosition(l, c);
-                slots[l][c]->Draw(screen, &pos);
+
+                slots[l][c]->Draw(screen, &pos, isPipeConnected(l, c));
             }
         }
     }
@@ -245,11 +246,48 @@ void Board::Draw ()
     pos.y = POOL_OFFSET_Y;
 
     for (int p = POOL_SIZE - 1; p > 0; p--, pos.y += POOL_SPACING) {
-        pool[p]->Draw(screen, &pos);
+        pool[p]->Draw(screen, &pos, false);
     }
 
     pos.y = POOL_TOP_Y;
-    pool[0]->Draw(screen, &pos);
+    pool[0]->Draw(screen, &pos, false);
+}
+
+bool Board::isPipeConnected(int col, int line) {
+    LOG(logDEBUG) << "col " << col << " line " << line;
+
+    if(col == INITIAL_COLUMN && line == INITIAL_LINE) {
+        return true;
+    }
+
+    Pipe* current = getPipe(col, line);
+    Pipe* pipe;
+
+    // connects on top?
+    pipe = getPipe(col, line - 1);
+    if(current->hasFlowEntry(FLOW_TOP) && pipe && pipe->hasFlowEntry(FLOW_DOWN)) {
+        return true;
+    }
+
+    // connects on right?
+    pipe = getPipe(col + 1, line);
+    if(current->hasFlowEntry(FLOW_RIGHT) && pipe && pipe->hasFlowEntry(FLOW_LEFT)) {
+        return true;
+    }
+
+    // connects on down?
+    pipe = getPipe(col, line + 1);
+    if(current->hasFlowEntry(FLOW_DOWN) && pipe && pipe->hasFlowEntry(FLOW_TOP)) {
+        return true;
+    }
+
+    // connects on left?
+    pipe = getPipe(col - 1, line);
+    if(current->hasFlowEntry(FLOW_LEFT) && pipe && pipe->hasFlowEntry(FLOW_RIGHT)) {
+        return true;
+    }
+
+    return false;
 }
 
 void Board::gameOver() {

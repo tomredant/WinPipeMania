@@ -1,5 +1,5 @@
-#include "Pipe.h"
-#include "Log.h"
+#include <Pipe.h>
+#include <Log.h>
 
 const int Pipe::pipe_size_middle = (PIPE_SIZE / 2);
 const int Pipe::pipe_size_middle_start = Pipe::pipe_size_middle - 1;
@@ -88,9 +88,17 @@ void Pipe::init(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param, bool t
     LOG(logDEBUG) << "Created a new Pipe: top " << top << " down " << down << " left " << left << " right " << right;
 }
 
-void Pipe::Draw(SDL_Surface* surface, SDL_Rect* position) {
+void Pipe::Draw(SDL_Surface* surface, SDL_Rect* position, bool connected) {
+    SDL_Surface *s;
+
+    if(connected) {
+        s = alt_sprite;
+    } else {
+        s = sprite;
+    }
+
     // draws the pipe
-    SDL_BlitSurface(alt_sprite, &sprite_position, surface, position);
+    SDL_BlitSurface(s, &sprite_position, surface, position);
 
     unsigned int rgb = SDL_MapRGB(surface->format, 255, 0, 0);
 
