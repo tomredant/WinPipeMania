@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <Board.h>
 #include <Pipe.h>
 #include <Log.h>
@@ -251,7 +252,7 @@ void Board::drawCronometer ()
     if (time_left < 0)
         time_left = 0;
 
-    out << "0:0" << time_left / 1000;
+    out << "0:" << std::setfill('0') << std::setw(2) << time_left / 1000;
 
     drawText(out.str().c_str(), color, CRON_OFFSET_X, CRON_OFFSET_Y, screen);
 }
