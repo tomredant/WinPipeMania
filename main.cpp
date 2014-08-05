@@ -9,9 +9,9 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
-#include <Board.h>
-#include <Pipe.h>
-#include <Log.h>
+#include "Board.h"
+#include "Pipe.h"
+#include "Log.h"
 
 #define FRAMES_PER_SECOND 25
 
