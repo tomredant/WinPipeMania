@@ -8,6 +8,7 @@
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <SDL/SDL_ttf.h>
 #include <Board.h>
 #include <Pipe.h>
 #include <Log.h>
@@ -25,11 +26,17 @@ int main ( int argc, char** argv )
     if ( SDL_Init( SDL_INIT_VIDEO ) < 0 )
     {
         printf( "Unable to init SDL: %s\n", SDL_GetError() );
-        return 1;
+        return EXIT_FAILURE;
     }
 
     // make sure SDL cleans up before exit
     atexit(SDL_Quit);
+
+    // initialize TTF library
+    if ( TTF_Init() < 0 ) {
+        fprintf(stderr, "Unable to initialize SDL_ttf: %s \n", TTF_GetError());
+        return EXIT_FAILURE;
+    }
 
     // create a new window
     SDL_Surface* screen = SDL_SetVideoMode(1024, 768, 16,
@@ -37,7 +44,7 @@ int main ( int argc, char** argv )
     if ( !screen )
     {
         printf("Unable to set 640x480 video: %s\n", SDL_GetError());
-        return 1;
+        return EXIT_FAILURE;
     }
 
     // load an image
@@ -45,21 +52,27 @@ int main ( int argc, char** argv )
     if (!background)
     {
         printf("Unable to load background: %s\n", SDL_GetError());
-        return 1;
+        return EXIT_FAILURE;
     }
 
     SDL_Surface* pipes_sprite = IMG_Load("pipes.png");
     if (!pipes_sprite)
     {
         printf("Unable to load pipesSprite: %s\n", SDL_GetError());
-        return 1;
+        return EXIT_FAILURE;
     }
 
     SDL_Surface* pipes_sprite_2 = IMG_Load("pipes2.png");
     if (!pipes_sprite_2)
     {
         printf("Unable to load pipesSprite2: %s\n", SDL_GetError());
-        return 1;
+        return EXIT_FAILURE;
+    }
+
+    TTF_Font *font = TTF_OpenFont(FONT_PATH, 20);
+    if (!font) {
+        printf("Unable to load font: %s\n", TTF_GetError());
+        return EXIT_FAILURE;
     }
 
     // centre the bitmap on screen
@@ -69,7 +82,7 @@ int main ( int argc, char** argv )
 
     LOG(logINFO) << "Game started !";
 
-    Board board = Board(screen, &dstrect, background, pipes_sprite, pipes_sprite_2);
+    Board board = Board(screen, &dstrect, background, pipes_sprite, pipes_sprite_2, font);
 
     // program main loop
     bool done = false;
@@ -133,8 +146,9 @@ int main ( int argc, char** argv )
     SDL_FreeSurface(background);
     SDL_FreeSurface(pipes_sprite);
     SDL_FreeSurface(pipes_sprite_2);
+    TTF_CloseFont(font);
 
     // all is well ;)
     printf("Exited cleanly\n");
-    return 0;
+    return EXIT_SUCCESS;
 }

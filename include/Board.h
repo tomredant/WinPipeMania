@@ -2,7 +2,10 @@
 #define BOARD_H
 
 #include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
 #include <Pipe.h>
+
+#define FONT_PATH "batmfa__.ttf"
 
 #define BOARD_LINES 14
 #define BOARD_COLUMNS 14
@@ -15,9 +18,12 @@
 #define POOL_TOP_x 944
 #define POOL_TOP_Y 312
 
-#define INITIAL_DELAY 3000
+#define INITIAL_DELAY 10000
 #define INITIAL_COLUMN 0
 #define INITIAL_LINE   7
+
+#define CRON_OFFSET_X 80
+#define CRON_OFFSET_Y 80
 
 class Board
 {
@@ -29,7 +35,7 @@ class Board
             pipe1 Pipes PNG 1
             pipe2 Pipes PNG 2
         */
-        Board (SDL_Surface *s, SDL_Rect *c, SDL_Surface *back, SDL_Surface *pipe1, SDL_Surface *pipe2);
+        Board (SDL_Surface *s, SDL_Rect *c, SDL_Surface *back, SDL_Surface *pipe1, SDL_Surface *pipe2, TTF_Font *font);
 
         /*! Input a mouse click */
         void mouseClick (int x, int y);
@@ -46,6 +52,7 @@ class Board
     private:
         SDL_Surface *screen, *background, *pipes_sprite1, *pipes_sprite2;
         SDL_Rect *coordinates;
+        TTF_Font *font;
         Pipe *slots[BOARD_LINES][BOARD_COLUMNS];
         Pipe *pool[POOL_SIZE];
 
@@ -64,6 +71,9 @@ class Board
         static const int x_offset, y_offset;
         static const int slotSize;
         static const int lines, columns;
+
+        void drawCronometer ();
+        void drawText (const char *text, SDL_Color color, int x, int y, SDL_Surface *screen);
 
         void rotatePool (void);
 
