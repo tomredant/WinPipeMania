@@ -126,6 +126,13 @@ class Board
         void startCurrentPipeFlow(int);
 
         /*
+            Adds points to the score.
+
+            int - the points to add.
+        */
+        void addScore(int);
+
+        /*
             Game over logic.
         */
         void gameOver();

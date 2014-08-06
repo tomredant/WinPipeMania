@@ -53,9 +53,7 @@ void Board::mouseClick (int x, int y)
             delete *pipe;
 
             // loses points for replacing pipe
-            score -= 10;
-            if (score < 0)
-                score = 0;
+            addScore(-10);
         }
 
         // Get top of the pool
@@ -344,7 +342,14 @@ bool Board::isPipeConnected(int col, int line) {
 
 void Board::startCurrentPipeFlow(int direction) {
     getCurrentPipe()->StartFlow(direction);
-    score += 100;
+    addScore(100);
+}
+
+void Board::addScore(int points) {
+    score += points;
+
+    if(score < 0)
+        score = 0;
 }
 
 void Board::gameOver() {
