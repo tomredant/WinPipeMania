@@ -18,6 +18,7 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1
     pipes_sprite2 = pipe2;
     font = f;
     starting_time = SDL_GetTicks();
+    points = 0;
     flow_started = false;
     game_in_progress = true;
 
@@ -257,6 +258,17 @@ void Board::drawCronometer ()
     drawText(out.str().c_str(), color, CRON_OFFSET_X, CRON_OFFSET_Y, screen);
 }
 
+void Board::drawPoints ()
+{
+    SDL_Color color = { 0xFF }; // red text
+    std::ostringstream out;
+
+    out << points;
+
+    drawText("Score", color, POINTS_LABEL_OFFSET_X, POINTS_LABEL_OFFSET_Y, screen);
+    drawText(out.str().c_str(), color, POINTS_OFFSET_X, POINTS_OFFSET_Y, screen);
+}
+
 void Board::Draw ()
 {
     // Draw background
@@ -286,8 +298,8 @@ void Board::Draw ()
     pos.y = POOL_TOP_Y;
     pool[0]->Draw(screen, &pos, false);
 
-    // Draw cronometer
     drawCronometer();
+    drawPoints();
 }
 
 bool Board::isPipeConnected(int col, int line) {
