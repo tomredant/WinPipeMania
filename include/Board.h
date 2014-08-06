@@ -25,6 +25,11 @@
 #define CRON_OFFSET_X 80
 #define CRON_OFFSET_Y 80
 
+#define SCORE_LABEL_OFFSET_X 65
+#define SCORE_LABEL_OFFSET_Y 480
+#define SCORE_OFFSET_X 65
+#define SCORE_OFFSET_Y 500
+
 class Board
 {
     public:
@@ -65,6 +70,9 @@ class Board
         // the time the game started
         int starting_time;
 
+        // game score
+        int score;
+
         // flags if the flow has started
         bool flow_started;
 
@@ -73,6 +81,7 @@ class Board
         static const int lines, columns;
 
         void drawCronometer ();
+        void drawScore ();
         void drawText (const char *text, SDL_Color color, int x, int y, SDL_Surface *screen);
 
         void rotatePool (void);
@@ -108,6 +117,20 @@ class Board
             int - the pipe line
         */
         bool isPipeConnected(int, int);
+
+        /*
+            Start flowing the current pipe.
+
+            int - the flow starting direction.
+        */
+        void startCurrentPipeFlow(int);
+
+        /*
+            Adds points to the score.
+
+            int - the points to add.
+        */
+        void addScore(int);
 
         /*
             Game over logic.

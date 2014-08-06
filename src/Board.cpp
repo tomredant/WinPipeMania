@@ -18,6 +18,7 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1
     pipes_sprite2 = pipe2;
     font = f;
     starting_time = SDL_GetTicks();
+    score = 0;
     flow_started = false;
     game_in_progress = true;
 
@@ -50,6 +51,9 @@ void Board::mouseClick (int x, int y)
                 return;
 
             delete *pipe;
+
+            // loses points for replacing pipe
+            addScore(-10);
         }
 
         // Get top of the pool
@@ -139,7 +143,7 @@ void Board::updateStartingFlow() {
         if (slots[INITIAL_COLUMN][INITIAL_LINE] != NULL) {
             current_pipe_column = INITIAL_COLUMN;
             current_pipe_line = INITIAL_LINE;
-            getCurrentPipe()->StartFlow(FLOW_LEFT);
+            startCurrentPipeFlow(FLOW_LEFT);
             flow_started = true;
         } else {
             gameOver();
@@ -162,7 +166,7 @@ void Board::updateNextPipe() {
         if (getCurrentPipe() == NULL || !getCurrentPipe()->hasFlowEntry(next_flow)) {
             gameOver();
         } else {
-            getCurrentPipe()->StartFlow(next_flow);
+            startCurrentPipeFlow(next_flow);
         }
     } else if(flow_started == true) {
         int next_flow_direction = calculateNextFlowDirection();
@@ -257,6 +261,17 @@ void Board::drawCronometer ()
     drawText(out.str().c_str(), color, CRON_OFFSET_X, CRON_OFFSET_Y, screen);
 }
 
+void Board::drawScore ()
+{
+    SDL_Color color = { 0xFF }; // red text
+    std::ostringstream out;
+
+    out << score;
+
+    drawText("Score", color, SCORE_LABEL_OFFSET_X, SCORE_LABEL_OFFSET_Y, screen);
+    drawText(out.str().c_str(), color, SCORE_OFFSET_X, SCORE_OFFSET_Y, screen);
+}
+
 void Board::Draw ()
 {
     // Draw background
@@ -286,13 +301,11 @@ void Board::Draw ()
     pos.y = POOL_TOP_Y;
     pool[0]->Draw(screen, &pos, false);
 
-    // Draw cronometer
     drawCronometer();
+    drawScore();
 }
 
 bool Board::isPipeConnected(int col, int line) {
-    LOG(logDEBUG) << "col " << col << " line " << line;
-
     if(col == INITIAL_COLUMN && line == INITIAL_LINE) {
         return true;
     }
@@ -325,6 +338,18 @@ bool Board::isPipeConnected(int col, int line) {
     }
 
     return false;
+}
+
+void Board::startCurrentPipeFlow(int direction) {
+    getCurrentPipe()->StartFlow(direction);
+    addScore(100);
+}
+
+void Board::addScore(int points) {
+    score += points;
+
+    if(score < 0)
+        score = 0;
 }
 
 void Board::gameOver() {
