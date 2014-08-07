@@ -3,6 +3,8 @@
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
+#include <string>
+
 #include "Pipe.h"
 
 #define FONT_PATH "batmfa__.ttf"
@@ -29,6 +31,8 @@
 #define SCORE_LABEL_OFFSET_Y 480
 #define SCORE_OFFSET_X 65
 #define SCORE_OFFSET_Y 500
+
+using namespace std;
 
 class Board
 {
@@ -96,6 +100,14 @@ class Board
         int calculateNextFlowDirection();
 
         /*
+            Checks if the next Pipe will work with the required entry flow.
+
+            int - the flow exiting the current pipe
+            int - the flow incoming the next pipe
+        */
+        bool possibleNextFlowDirection(int, int);
+
+        /*
             Gets the pipe for the given column/line..
         */
         Pipe* getPipe(int, int);
@@ -135,7 +147,7 @@ class Board
         /*
             Game over logic.
         */
-        void gameOver();
+        void gameOver(string);
 };
 
 #endif // BOARD_H

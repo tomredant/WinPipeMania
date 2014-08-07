@@ -67,7 +67,7 @@ Log::Log ()
 
 Log::~Log ()
 {
-#if 1 // Set to 1 to output logs on stderr and 0 to send logs to file
+#if 0 // Set to 1 to output logs on stderr and 0 to send logs to file
     FILE* pStream = stderr;
 #else
     FILE* pStream = fopen("pipemania.log", "a");
