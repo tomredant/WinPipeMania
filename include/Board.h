@@ -55,6 +55,9 @@ class Board
 
         /*! Draw board and pipes on screen */
         void Draw ();
+
+        /*! Returns if the game finished. */
+        bool gameOver();
     protected:
     private:
         SDL_Surface *screen, *background, *pipes_sprite1, *pipes_sprite2;
@@ -66,8 +69,8 @@ class Board
         // the current pipe flowing
         int current_pipe_line, current_pipe_column;
 
-        // Flags if there is a game in progress
-        bool game_in_progress;
+        // Flags if the game finished
+        bool game_over;
 
         // the time the game started
         int starting_time;

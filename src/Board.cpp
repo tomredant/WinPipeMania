@@ -23,7 +23,7 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1
     starting_time = SDL_GetTicks();
     score = 0;
     flow_started = false;
-    game_in_progress = true;
+    game_over = false;
 
     for (int line = 0; line < lines; line++) {
         for (int column = 0; column < columns; column++) {
@@ -124,11 +124,9 @@ Pipe* Board::getNextPipe(const int direction, int *column, int *line, int *flow)
 }
 
 void Board::Update() {
-    if(game_in_progress) {
-        updatePipes();
-        updateStartingFlow();
-        updateNextPipe();
-    }
+    updatePipes();
+    updateStartingFlow();
+    updateNextPipe();
 }
 
 void Board::updatePipes() {
@@ -354,5 +352,9 @@ void Board::addScore(int points) {
 
 void Board::gameOver(string reason) {
     LOG(logINFO) << "Game over ! " << reason;
-    game_in_progress = false;
+    game_over = true;
+}
+
+bool Board::gameOver() {
+    return game_over;
 }

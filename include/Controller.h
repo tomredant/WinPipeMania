@@ -5,6 +5,9 @@
 #include <SDL/SDL_ttf.h>
 #include "Board.h"
 
+#define STATE_IN_PROGRESS 1
+#define STATE_GAME_OVER 2
+
 class Controller
 {
     public:
@@ -27,7 +30,14 @@ class Controller
         void Draw ();
     protected:
     private:
+        SDL_Surface *screen, *background, *pipes_sprite1, *pipes_sprite2;
+        SDL_Rect *coordinates;
+        TTF_Font *font;
+
         Board *board;
+        int game_state;
+
+        void startGame();
 };
 
 #endif // BOARD_H
