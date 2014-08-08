@@ -62,6 +62,7 @@
 			<Option target="Release" />
 		</Unit>
 		<Unit filename="include/Board.h" />
+		<Unit filename="include/Controller.h" />
 		<Unit filename="include/Log.h" />
 		<Unit filename="include/Pipe.h" />
 		<Unit filename="main.cpp" />
@@ -74,6 +75,7 @@
 			<Option target="Release" />
 		</Unit>
 		<Unit filename="src/Board.cpp" />
+		<Unit filename="src/Controller.cpp" />
 		<Unit filename="src/Log.cpp" />
 		<Unit filename="src/Pipe.cpp" />
 		<Extensions>

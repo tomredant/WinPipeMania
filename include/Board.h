@@ -7,8 +7,6 @@
 
 #include "Pipe.h"
 
-#define FONT_PATH "batmfa__.ttf"
-
 #define BOARD_LINES 14
 #define BOARD_COLUMNS 14
 

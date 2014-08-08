@@ -9,11 +9,11 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
-#include "Board.h"
-#include "Pipe.h"
 #include "Log.h"
+#include "Controller.h"
 
 #define FRAMES_PER_SECOND 25
+#define FONT_PATH "batmfa__.ttf"
 
 const int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
 
@@ -82,14 +82,14 @@ int main ( int argc, char** argv )
 
     LOG(logINFO) << "Game started !";
 
-    Board board = Board(screen, &dstrect, background, pipes_sprite, pipes_sprite_2, font);
+    Controller controller = Controller(screen, &dstrect, background, pipes_sprite, pipes_sprite_2, font);
 
     // program main loop
     bool done = false;
     unsigned int ticks_now, next_game_tick = SDL_GetTicks();
     while (!done)
     {
-        board.Update();
+        controller.Update();
 
         // message processing loop
         SDL_Event event;
@@ -116,7 +116,7 @@ int main ( int argc, char** argv )
                 {
                     int x, y;
                     SDL_GetMouseState(&x, &y);
-                    board.mouseClick(x, y);
+                    controller.mouseClick(x, y);
                     break;
                 }
             }
@@ -130,7 +130,7 @@ int main ( int argc, char** argv )
         SDL_FillRect(screen, 0, SDL_MapRGB(screen->format, 0, 0, 0));
 
         // draw bitmap
-        board.Draw();
+        controller.Draw();
         // DRAWING ENDS HERE
 
         // finally, update the screen :)
