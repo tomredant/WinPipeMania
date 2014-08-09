@@ -3,9 +3,9 @@
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
-#include "Pipe.h"
+#include <string>
 
-#define FONT_PATH "batmfa__.ttf"
+#include "Pipe.h"
 
 #define BOARD_LINES 14
 #define BOARD_COLUMNS 14
@@ -30,6 +30,8 @@
 #define SCORE_OFFSET_X 65
 #define SCORE_OFFSET_Y 500
 
+using namespace std;
+
 class Board
 {
     public:
@@ -53,6 +55,9 @@ class Board
 
         /*! Draw board and pipes on screen */
         void Draw ();
+
+        /*! Returns if the game finished. */
+        bool gameOver();
     protected:
     private:
         SDL_Surface *screen, *background, *pipes_sprite1, *pipes_sprite2;
@@ -64,8 +69,8 @@ class Board
         // the current pipe flowing
         int current_pipe_line, current_pipe_column;
 
-        // Flags if there is a game in progress
-        bool game_in_progress;
+        // Flags if the game finished
+        bool game_over;
 
         // the time the game started
         int starting_time;
@@ -94,6 +99,14 @@ class Board
             Calculates where the next flow direction should be.
         */
         int calculateNextFlowDirection();
+
+        /*
+            Checks if the next Pipe will work with the required entry flow.
+
+            int - the flow exiting the current pipe
+            int - the flow incoming the next pipe
+        */
+        bool possibleNextFlowDirection(int, int);
 
         /*
             Gets the pipe for the given column/line..
@@ -135,7 +148,7 @@ class Board
         /*
             Game over logic.
         */
-        void gameOver();
+        void gameOver(string);
 };
 
 #endif // BOARD_H

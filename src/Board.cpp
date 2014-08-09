@@ -1,7 +1,10 @@
 #include <iomanip>
+#include <string>
 #include "Board.h"
 #include "Pipe.h"
 #include "Log.h"
+
+using namespace std;
 
 const int Board::x_offset = 227;
 const int Board::y_offset = 35;
@@ -20,7 +23,7 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1
     starting_time = SDL_GetTicks();
     score = 0;
     flow_started = false;
-    game_in_progress = true;
+    game_over = false;
 
     for (int line = 0; line < lines; line++) {
         for (int column = 0; column < columns; column++) {
@@ -121,11 +124,9 @@ Pipe* Board::getNextPipe(const int direction, int *column, int *line, int *flow)
 }
 
 void Board::Update() {
-    if(game_in_progress) {
-        updatePipes();
-        updateStartingFlow();
-        updateNextPipe();
-    }
+    updatePipes();
+    updateStartingFlow();
+    updateNextPipe();
 }
 
 void Board::updatePipes() {
@@ -146,7 +147,7 @@ void Board::updateStartingFlow() {
             startCurrentPipeFlow(FLOW_LEFT);
             flow_started = true;
         } else {
-            gameOver();
+            gameOver("No starting pipe");
         }
     }
 }
@@ -164,60 +165,41 @@ void Board::updateNextPipe() {
 
         // game over if has no next pipe or the next pipe does not have the next_flow entry
         if (getCurrentPipe() == NULL || !getCurrentPipe()->hasFlowEntry(next_flow)) {
-            gameOver();
+            gameOver("No next pipe NULL or next pipe has no flow entry for " + next_flow);
         } else {
             startCurrentPipeFlow(next_flow);
         }
-    } else if(flow_started == true) {
+    } else if(flow_started == true && getCurrentPipe()->isFlowHalf()) {
         int next_flow_direction = calculateNextFlowDirection();
 
         if(next_flow_direction > 0) {
             getCurrentPipe()->setFlowTurnPosition(next_flow_direction);
         } else {
-            gameOver();
+            gameOver("No next flow direction");
         }
     }
 }
 
 int Board::calculateNextFlowDirection() {
-    Pipe* pipe = getCurrentPipe();
-    Pipe* next_pipe;
-    int column, line, flow;
-
-    // finds the first possible next pipe
-    if (pipe->hasFlowEntry(FLOW_TOP) && pipe->getFlowStartPosition() != FLOW_TOP) {
-        next_pipe = getNextPipe(FLOW_TOP, &column, &line, &flow);
-
-        if(next_pipe && next_pipe->hasFlowEntry(FLOW_DOWN)) {
-            return FLOW_TOP;
-        }
+    if(possibleNextFlowDirection(FLOW_TOP, FLOW_DOWN)) {
+        return FLOW_TOP;
     }
 
-    if (next_pipe == NULL && pipe->hasFlowEntry(FLOW_RIGHT) && pipe->getFlowStartPosition() != FLOW_RIGHT) {
-        next_pipe = getNextPipe(FLOW_RIGHT, &column, &line, &flow);
-
-        if(next_pipe && next_pipe->hasFlowEntry(FLOW_LEFT)) {
-            return FLOW_RIGHT;
-        }
+    if(possibleNextFlowDirection(FLOW_RIGHT, FLOW_LEFT)) {
+        return FLOW_RIGHT;
     }
 
-    if (next_pipe == NULL && pipe->hasFlowEntry(FLOW_DOWN) && pipe->getFlowStartPosition() != FLOW_DOWN) {
-        next_pipe = getNextPipe(FLOW_DOWN, &column, &line, &flow);
-
-        if(next_pipe && next_pipe->hasFlowEntry(FLOW_TOP)) {
-            return FLOW_DOWN;
-        }
+    if(possibleNextFlowDirection(FLOW_DOWN, FLOW_TOP)) {
+        return FLOW_DOWN;
     }
 
-    if (next_pipe == NULL && pipe->hasFlowEntry(FLOW_LEFT) && pipe->getFlowStartPosition() != FLOW_LEFT) {
-        next_pipe = getNextPipe(FLOW_LEFT, &column, &line, &flow);
-
-        if(next_pipe && next_pipe->hasFlowEntry(FLOW_RIGHT)) {
-            return FLOW_LEFT;
-        }
+    if(possibleNextFlowDirection(FLOW_LEFT, FLOW_RIGHT)) {
+        return FLOW_LEFT;
     }
 
     // if couldn't find anything, turn to the first possible one
+    Pipe* pipe = getCurrentPipe();
+
     if(pipe->hasFlowEntry(FLOW_TOP) && pipe->getFlowStartPosition() != FLOW_TOP) {
         return FLOW_TOP;
     } else if(pipe->hasFlowEntry(FLOW_RIGHT) && pipe->getFlowStartPosition() != FLOW_RIGHT) {
@@ -229,6 +211,22 @@ int Board::calculateNextFlowDirection() {
     }
 
     return 0;
+}
+
+bool Board::possibleNextFlowDirection(int outgoing_flow, int incoming_flow) {
+    Pipe* pipe = getCurrentPipe();
+    Pipe* next_pipe;
+    int column, line, flow;
+
+    if (pipe->hasFlowEntry(outgoing_flow) && pipe->getFlowStartPosition() != outgoing_flow) {
+        next_pipe = getNextPipe(outgoing_flow, &column, &line, &flow);
+
+        if(next_pipe && next_pipe->hasFlowEntry(incoming_flow)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void Board::drawText (const char *text, SDL_Color color, int x, int y, SDL_Surface *screen)
@@ -352,7 +350,11 @@ void Board::addScore(int points) {
         score = 0;
 }
 
-void Board::gameOver() {
-    LOG(logINFO) << "Game over !";
-    game_in_progress = false;
+void Board::gameOver(string reason) {
+    LOG(logINFO) << "Game over ! " << reason;
+    game_over = true;
+}
+
+bool Board::gameOver() {
+    return game_over;
 }

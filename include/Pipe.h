@@ -58,6 +58,11 @@ class Pipe
         bool isBlocked (void);
 
         /*
+            Checks if the flow of this pipe is half the way through.
+        */
+        bool isFlowHalf();
+
+        /*
             Checks if the flow of this pipe has already finished.
         */
         bool isFlowFinished();
