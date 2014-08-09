@@ -64,6 +64,8 @@ class Board
 
         /*! Returns if the game finished. */
         bool isGameOver();
+
+        void startGame();
     protected:
     private:
         SDL_Surface *screen, *background, *pipes_sprite1, *pipes_sprite2;
