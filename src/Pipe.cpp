@@ -16,6 +16,7 @@ Pipe::Pipe(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param)
     bool d = rand() & 0x1;
     bool l = rand() & 0x1;
 
+
     init(sprite_param, alt_sprite_param, t, r, d, l);
 }
 
@@ -31,7 +32,7 @@ void Pipe::init(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param, bool t
 
     sprite_position.w = sprite_position.h = PIPE_SIZE;
 
-    flow = false;
+    blocked = flow = false;
     flowed_pixels = time = 0;
 
     // Sets up the sprites position based on the pipe openings
@@ -130,7 +131,11 @@ void Pipe::Update() {
 bool Pipe::isBlocked (void)
 {
     // if it has flow then its blocked
-    return flow;
+    return flow || blocked;
+}
+
+void Pipe::block() {
+    blocked = true;
 }
 
 bool Pipe::hasFlowEntry(int entry) {

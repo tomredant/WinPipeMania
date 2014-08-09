@@ -30,6 +30,8 @@
 #define SCORE_OFFSET_X 65
 #define SCORE_OFFSET_Y 500
 
+#define BLOCKED_POSITIONS 4
+
 using namespace std;
 
 class Board

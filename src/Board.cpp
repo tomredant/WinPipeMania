@@ -31,6 +31,22 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1
         }
     }
 
+    // blocked positions
+    for(int i = 0; i < BLOCKED_POSITIONS; i++) {
+        int column, line;
+
+        do {
+            column = rand() % BOARD_COLUMNS;
+            line   = rand() % BOARD_LINES;
+        } while(slots[line][column]);
+
+        Pipe* pipe = new Pipe(pipes_sprite1, pipes_sprite2, false, false, false, false);
+        pipe->block();
+
+        slots[line][column] = pipe;
+    }
+
+
     for (int p = 0; p < POOL_SIZE; p++) {
         pool[p] = new Pipe(pipes_sprite1, pipes_sprite2);
     }
