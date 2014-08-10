@@ -11,11 +11,14 @@ Pipe::Pipe(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param, bool top_pa
 
 Pipe::Pipe(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param)
 {
-    bool t = rand() & 0x1;
-    bool r = rand() & 0x1;
-    bool d = rand() & 0x1;
-    bool l = rand() & 0x1;
+    bool t, r, d, l;
 
+    do {
+        t = rand() & 0x1;
+        r = rand() & 0x1;
+        d = rand() & 0x1;
+        l = rand() & 0x1;
+    } while (!(t || r || d || l)); // Never create blockers, unless explicity told so
 
     init(sprite_param, alt_sprite_param, t, r, d, l);
 }

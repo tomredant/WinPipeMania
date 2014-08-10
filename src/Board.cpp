@@ -25,6 +25,7 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1
     flow_started = false;
     game_over = false;
 
+    // Game board positions
     for (int line = 0; line < lines; line++) {
         for (int column = 0; column < columns; column++) {
             slots[line][column] = NULL;
@@ -46,7 +47,7 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1
         slots[line][column] = pipe;
     }
 
-
+    // Pool
     for (int p = 0; p < POOL_SIZE; p++) {
         pool[p] = new Pipe(pipes_sprite1, pipes_sprite2);
     }
