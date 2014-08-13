@@ -58,6 +58,11 @@ class Pipe
         bool isBlocked (void);
 
         /*
+            Blocks the pipe.
+        */
+        void block();
+
+        /*
             Checks if the flow of this pipe is half the way through.
         */
         bool isFlowHalf();
@@ -103,6 +108,9 @@ class Pipe
 
         // toggles water flowing for this pipe
         bool flow;
+
+        // flags if the pipe is blocked
+        bool blocked;
 
         // the flow start/turn position
         int flow_start_position, flow_turn_position;
