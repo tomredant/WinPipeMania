@@ -20,9 +20,6 @@ Pipe::Pipe(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param)
         l = rand() & 0x1;
     } while (!(t || r || d || l)); // Never create blockers, unless explicity told so
 
-    l = r = t = true;
-    d = false;
-
     init(sprite_param, alt_sprite_param, t, r, d, l);
 }
 
