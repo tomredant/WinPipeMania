@@ -21,6 +21,8 @@
 #define INITIAL_DELAY 10000
 #define INITIAL_COLUMN 0
 #define INITIAL_LINE   7
+#define FINAL_COLUMN 13
+#define FINAL_LINE   7
 
 #define CRON_OFFSET_X 80
 #define CRON_OFFSET_Y 80
@@ -29,6 +31,8 @@
 #define SCORE_LABEL_OFFSET_Y 480
 #define SCORE_OFFSET_X 65
 #define SCORE_OFFSET_Y 500
+#define GAME_OVER_OFFSET_X 450
+#define GAME_OVER_OFFSET_Y 300
 
 #define BLOCKED_POSITIONS 4
 
@@ -59,7 +63,7 @@ class Board
         void Draw ();
 
         /*! Returns if the game finished. */
-        bool gameOver();
+        bool isGameOver();
     protected:
     private:
         SDL_Surface *screen, *background, *pipes_sprite1, *pipes_sprite2;
@@ -73,6 +77,7 @@ class Board
 
         // Flags if the game finished
         bool game_over;
+        bool game_over_success;
 
         // the time the game started
         int starting_time;
@@ -87,8 +92,12 @@ class Board
         static const int slotSize;
         static const int lines, columns;
 
+        // text color
+        SDL_Color text_color;
+
         void drawCronometer ();
         void drawScore ();
+        void drawGameOver ();
         void drawText (const char *text, SDL_Color color, int x, int y, SDL_Surface *screen);
 
         void rotatePool (void);
@@ -151,6 +160,11 @@ class Board
             Game over logic.
         */
         void gameOver(string);
+
+        /*
+            Successful game over logic.
+        */
+        void successfulGameOver();
 };
 
 #endif // BOARD_H

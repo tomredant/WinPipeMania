@@ -25,7 +25,7 @@ void Controller::mouseClick (int x, int y) {
 void Controller::Update() {
     switch(game_state) {
     case STATE_IN_PROGRESS:
-        if(board->gameOver()) {
+        if(board->isGameOver()) {
             game_state = STATE_GAME_OVER;
         } else {
             board->Update();

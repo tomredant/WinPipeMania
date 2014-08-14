@@ -24,6 +24,7 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1
     score = 0;
     flow_started = false;
     game_over = false;
+    text_color = { 0xFF }; // red text
 
     // Game board positions
     for (int line = 0; line < lines; line++) {
@@ -171,6 +172,12 @@ void Board::updateStartingFlow() {
 
 void Board::updateNextPipe() {
     if (flow_started == true && getCurrentPipe()->isFlowFinished()) {
+       if (current_pipe_column == FINAL_COLUMN && current_pipe_line == FINAL_LINE && getCurrentPipe()->getFlowTurnPosition() == FLOW_RIGHT && getCurrentPipe()->hasFlowEntry(FLOW_RIGHT)) {
+            successfulGameOver();
+            return;
+        }
+
+
         int flow_direction = getCurrentPipe()->getFlowTurnPosition();
         int next_flow;
         int column, line, flow;
@@ -217,7 +224,9 @@ int Board::calculateNextFlowDirection() {
     // if couldn't find anything, turn to the first possible one
     Pipe* pipe = getCurrentPipe();
 
-    if(pipe->hasFlowEntry(FLOW_TOP) && pipe->getFlowStartPosition() != FLOW_TOP) {
+    if(current_pipe_column == FINAL_COLUMN && current_pipe_line == FINAL_LINE) {
+        return FLOW_RIGHT;
+    } else if(pipe->hasFlowEntry(FLOW_TOP) && pipe->getFlowStartPosition() != FLOW_TOP) {
         return FLOW_TOP;
     } else if(pipe->hasFlowEntry(FLOW_RIGHT) && pipe->getFlowStartPosition() != FLOW_RIGHT) {
         return FLOW_RIGHT;
@@ -264,7 +273,6 @@ void Board::drawText (const char *text, SDL_Color color, int x, int y, SDL_Surfa
 
 void Board::drawCronometer ()
 {
-    SDL_Color color = { 0xFF }; // red text
     std::ostringstream out;
     int time_left = starting_time - SDL_GetTicks() + INITIAL_DELAY;
 
@@ -273,18 +281,25 @@ void Board::drawCronometer ()
 
     out << "0:" << std::setfill('0') << std::setw(2) << time_left / 1000;
 
-    drawText(out.str().c_str(), color, CRON_OFFSET_X, CRON_OFFSET_Y, screen);
+    drawText(out.str().c_str(), text_color, CRON_OFFSET_X, CRON_OFFSET_Y, screen);
 }
 
 void Board::drawScore ()
 {
-    SDL_Color color = { 0xFF }; // red text
     std::ostringstream out;
 
     out << score;
 
-    drawText("Score", color, SCORE_LABEL_OFFSET_X, SCORE_LABEL_OFFSET_Y, screen);
-    drawText(out.str().c_str(), color, SCORE_OFFSET_X, SCORE_OFFSET_Y, screen);
+    drawText("Score", text_color, SCORE_LABEL_OFFSET_X, SCORE_LABEL_OFFSET_Y, screen);
+    drawText(out.str().c_str(), text_color, SCORE_OFFSET_X, SCORE_OFFSET_Y, screen);
+}
+
+void Board::drawGameOver() {
+    if (game_over_success) {
+        drawText("CONGRATULATIONS!", text_color, GAME_OVER_OFFSET_X, GAME_OVER_OFFSET_Y, screen);
+    } else {
+        drawText("GAME OVER!", text_color, GAME_OVER_OFFSET_X, GAME_OVER_OFFSET_Y, screen);
+    }
 }
 
 void Board::Draw ()
@@ -318,6 +333,10 @@ void Board::Draw ()
 
     drawCronometer();
     drawScore();
+
+    if (game_over) {
+        drawGameOver();
+    }
 }
 
 bool Board::isPipeConnected(int col, int line) {
@@ -372,6 +391,14 @@ void Board::gameOver(string reason) {
     game_over = true;
 }
 
-bool Board::gameOver() {
+void Board::successfulGameOver() {
+    LOG(logINFO) << "Successful Game over !";
+    game_over = true;
+    game_over_success = true;
+}
+
+bool Board::isGameOver() {
     return game_over;
 }
+
+
