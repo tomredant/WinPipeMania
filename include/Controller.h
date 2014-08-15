@@ -4,8 +4,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include "Board.h"
-
-#define SPLASH_SCREEN_FADE 1000
+#include "Splash.h"
 
 enum gameState {
     STATE_SPLASH_SCREEN,
@@ -36,19 +35,18 @@ class Controller
         void Draw ();
     protected:
     private:
-        SDL_Surface *screen, *background, *pipes_sprite1, *pipes_sprite2, *fadeSurface, *splash;
+        SDL_Surface *screen, *background, *pipes_sprite1, *pipes_sprite2;
         SDL_Rect *coordinates;
         TTF_Font *font;
 
         Board *board;
+        Splash *splashScreen;
         int game_state;
         int starting_time;
         int splashAlpha;
 
         void startGame();
         void changeState (gameState new_state);
-        void drawSplash ();
-        bool updateSplash();
 };
 
 #endif // BOARD_H
