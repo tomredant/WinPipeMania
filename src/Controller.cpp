@@ -2,7 +2,7 @@
 #include "Board.h"
 #include "Log.h"
 
-Controller::Controller(SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1, SDL_Surface* pipe2, TTF_Font *f)
+Controller::Controller(SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1, SDL_Surface* pipe2, TTF_Font *f, SDL_Surface *s2)
 {
     screen = s;
     coordinates = c;
@@ -10,8 +10,9 @@ Controller::Controller(SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surfa
     pipes_sprite1 = pipe1;
     pipes_sprite2 = pipe2;
     font = f;
-
-    startGame();
+    game_state = STATE_SPLASH_SCREEN;
+    board = new Board(screen, coordinates, background, pipes_sprite1, pipes_sprite2, font);
+    splashScreen = new Splash(screen, s2);
 }
 
 void Controller::mouseClick (int x, int y) {
@@ -24,9 +25,13 @@ void Controller::mouseClick (int x, int y) {
 
 void Controller::Update() {
     switch(game_state) {
+    case STATE_SPLASH_SCREEN:
+        if (splashScreen->Update())
+            changeState(STATE_IN_PROGRESS);
+        break;
     case STATE_IN_PROGRESS:
         if(board->isGameOver()) {
-            game_state = STATE_GAME_OVER;
+            changeState(STATE_GAME_OVER);
         } else {
             board->Update();
         }
@@ -35,10 +40,28 @@ void Controller::Update() {
 }
 
 void Controller::Draw() {
-    board->Draw();
+    switch(game_state) {
+    case STATE_SPLASH_SCREEN:
+        splashScreen->Draw();
+        break;
+    case STATE_IN_PROGRESS:
+        board->Draw();
+        break;
+    }
 }
 
-void Controller::startGame() {
-    board = new Board(screen, coordinates, background, pipes_sprite1, pipes_sprite2, font);
-    game_state = STATE_IN_PROGRESS;
+void Controller::startGame()
+{
+    board->startGame();
+}
+
+void Controller::changeState (gameState new_state)
+{
+    if (new_state == STATE_IN_PROGRESS && game_state != STATE_IN_PROGRESS) {
+        startGame();
+    }
+
+    LOG(logINFO) << "Switching state from " << game_state << " to " << new_state;
+
+    game_state = new_state;
 }

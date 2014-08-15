@@ -68,6 +68,12 @@ int main ( int argc, char** argv )
         printf("Unable to load pipesSprite2: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
+    SDL_Surface* splash = IMG_Load("kct_logo.png");
+    if (!splash)
+    {
+        printf("Unable to load kct logo: %s\n", SDL_GetError());
+        return EXIT_FAILURE;
+    }
 
     TTF_Font *font = TTF_OpenFont(FONT_PATH, 20);
     if (!font) {
@@ -82,7 +88,7 @@ int main ( int argc, char** argv )
 
     LOG(logINFO) << "Game started !";
 
-    Controller controller = Controller(screen, &dstrect, background, pipes_sprite, pipes_sprite_2, font);
+    Controller controller = Controller(screen, &dstrect, background, pipes_sprite, pipes_sprite_2, font, splash);
 
     // program main loop
     bool done = false;

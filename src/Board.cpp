@@ -20,10 +20,6 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1
     pipes_sprite1 = pipe1;
     pipes_sprite2 = pipe2;
     font = f;
-    starting_time = SDL_GetTicks();
-    score = 0;
-    flow_started = false;
-    game_over = false;
     text_color = { 0xFF }; // red text
 
     // Game board positions
@@ -401,4 +397,10 @@ bool Board::isGameOver() {
     return game_over;
 }
 
-
+void Board::startGame ()
+{
+    score = 0;
+    flow_started = false;
+    game_over = false;
+    starting_time = SDL_GetTicks();
+}
