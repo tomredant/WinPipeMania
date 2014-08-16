@@ -13,7 +13,6 @@
 #include "Controller.h"
 
 #define FRAMES_PER_SECOND 25
-#define FONT_PATH "batmfa__.ttf"
 
 const int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
 
@@ -75,12 +74,6 @@ int main ( int argc, char** argv )
         return EXIT_FAILURE;
     }
 
-    TTF_Font *font = TTF_OpenFont(FONT_PATH, 20);
-    if (!font) {
-        printf("Unable to load font: %s\n", TTF_GetError());
-        return EXIT_FAILURE;
-    }
-
     // centre the bitmap on screen
     SDL_Rect dstrect;
     dstrect.x = (screen->w - background->w) / 2;
@@ -88,7 +81,7 @@ int main ( int argc, char** argv )
 
     LOG(logINFO) << "Game started !";
 
-    Controller controller = Controller(screen, &dstrect, background, pipes_sprite, pipes_sprite_2, font, splash);
+    Controller controller = Controller(screen, &dstrect, background, pipes_sprite, pipes_sprite_2, splash);
 
     // program main loop
     bool done = false;
@@ -152,7 +145,6 @@ int main ( int argc, char** argv )
     SDL_FreeSurface(background);
     SDL_FreeSurface(pipes_sprite);
     SDL_FreeSurface(pipes_sprite_2);
-    TTF_CloseFont(font);
 
     // all is well ;)
     printf("Exited cleanly\n");

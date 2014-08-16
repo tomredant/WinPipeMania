@@ -2,10 +2,10 @@
 #define BOARD_H
 
 #include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
 #include <string>
 
 #include "Pipe.h"
+#include "Text.h"
 
 #define BOARD_LINES 14
 #define BOARD_COLUMNS 14
@@ -18,7 +18,7 @@
 #define POOL_TOP_x 944
 #define POOL_TOP_Y 312
 
-#define INITIAL_DELAY 10000
+#define INITIAL_TIMER 10
 #define INITIAL_COLUMN 0
 #define INITIAL_LINE   7
 #define FINAL_COLUMN 13
@@ -31,7 +31,7 @@
 #define SCORE_LABEL_OFFSET_Y 480
 #define SCORE_OFFSET_X 65
 #define SCORE_OFFSET_Y 500
-#define GAME_OVER_OFFSET_X 450
+#define GAME_OVER_OFFSET_X 400
 #define GAME_OVER_OFFSET_Y 300
 
 #define BLOCKED_POSITIONS 4
@@ -48,7 +48,7 @@ class Board
             pipe1 Pipes PNG 1
             pipe2 Pipes PNG 2
         */
-        Board (SDL_Surface *s, SDL_Rect *c, SDL_Surface *back, SDL_Surface *pipe1, SDL_Surface *pipe2, TTF_Font *font);
+        Board (SDL_Surface *s, SDL_Rect *c, SDL_Surface *pipe1, SDL_Surface *pipe2);
 
         /*! Input a mouse click */
         void mouseClick (int x, int y);
@@ -68,9 +68,8 @@ class Board
         void startGame();
     protected:
     private:
-        SDL_Surface *screen, *background, *pipes_sprite1, *pipes_sprite2;
+        SDL_Surface *screen, *pipes_sprite1, *pipes_sprite2;
         SDL_Rect *coordinates;
-        TTF_Font *font;
         Pipe *slots[BOARD_LINES][BOARD_COLUMNS];
         Pipe *pool[POOL_SIZE];
 
@@ -87,6 +86,9 @@ class Board
         // game score
         int score;
 
+        // the starting timer
+        int timer, last_ticks;
+
         // flags if the flow has started
         bool flow_started;
 
@@ -94,8 +96,7 @@ class Board
         static const int slotSize;
         static const int lines, columns;
 
-        // text color
-        SDL_Color text_color;
+        Text *cronometer_text, *score_label_text, *score_value_text, *game_over_text;
 
         void drawCronometer ();
         void drawScore ();
@@ -104,6 +105,7 @@ class Board
 
         void rotatePool (void);
 
+        void updateCronometer();
         void updatePipes();
         void updateStartingFlow();
         void updateNextPipe();

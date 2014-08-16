@@ -23,7 +23,7 @@ class Controller
             pipe1 Pipes PNG 1
             pipe2 Pipes PNG 2
         */
-        Controller (SDL_Surface *s, SDL_Rect *c, SDL_Surface *back, SDL_Surface *pipe1, SDL_Surface *pipe2, TTF_Font *font, SDL_Surface *splash);
+        Controller (SDL_Surface *s, SDL_Rect *c, SDL_Surface *back, SDL_Surface *pipe1, SDL_Surface *pipe2, SDL_Surface *splash);
 
         /*! Input a mouse click */
         void mouseClick (int x, int y);
@@ -37,7 +37,6 @@ class Controller
     private:
         SDL_Surface *screen, *background, *pipes_sprite1, *pipes_sprite2;
         SDL_Rect *coordinates;
-        TTF_Font *font;
 
         Board *board;
         Splash *splashScreen;
