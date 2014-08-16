@@ -173,7 +173,8 @@ void Board::updatePipes() {
 
 void Board::updateStartingFlow() {
     if (flow_started == false && timer == 0) {
-        if (slots[INITIAL_COLUMN][INITIAL_LINE] != NULL) {
+        Pipe *pipe = slots[INITIAL_COLUMN][INITIAL_LINE];
+        if (pipe && pipe->hasFlowEntry(FLOW_LEFT)) {
             current_pipe_column = INITIAL_COLUMN;
             current_pipe_line = INITIAL_LINE;
             startCurrentPipeFlow(FLOW_LEFT);
