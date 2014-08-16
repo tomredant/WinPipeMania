@@ -12,15 +12,19 @@ const int Board::slotSize = 48;
 const int Board::lines = BOARD_LINES;
 const int Board::columns = BOARD_COLUMNS;
 
-Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1, SDL_Surface* pipe2, TTF_Font *f)
+Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* pipe1, SDL_Surface* pipe2)
 {
     screen = s;
     coordinates = c;
-    background = back;
     pipes_sprite1 = pipe1;
     pipes_sprite2 = pipe2;
-    font = f;
-    text_color = { 0xFF }; // red text
+    timer = INITIAL_TIMER;
+    last_ticks = 0;
+
+    cronometer_text = new Text(screen, CRON_OFFSET_X, CRON_OFFSET_Y, 20);
+    score_label_text = new Text(screen, SCORE_LABEL_OFFSET_X, SCORE_LABEL_OFFSET_Y, 20);
+    score_value_text = new Text(screen, SCORE_OFFSET_X, SCORE_OFFSET_Y, 20);
+    game_over_text = new Text(screen, GAME_OVER_OFFSET_X, GAME_OVER_OFFSET_Y, 30);
 
     // Game board positions
     for (int line = 0; line < lines; line++) {
@@ -138,9 +142,23 @@ Pipe* Board::getNextPipe(const int direction, int *column, int *line, int *flow)
 }
 
 void Board::Update() {
+    updateCronometer();
     updatePipes();
     updateStartingFlow();
     updateNextPipe();
+}
+
+void Board::updateCronometer() {
+    int current_ticks = SDL_GetTicks();
+
+    // decreases every second
+    if (current_ticks > last_ticks + 1000) {
+        timer -= 1;
+        last_ticks = current_ticks;
+    }
+
+    if (timer < 0)
+        timer = 0;
 }
 
 void Board::updatePipes() {
@@ -154,7 +172,7 @@ void Board::updatePipes() {
 }
 
 void Board::updateStartingFlow() {
-    if (flow_started == false && SDL_GetTicks() - starting_time > INITIAL_DELAY) {
+    if (flow_started == false && timer == 0) {
         if (slots[INITIAL_COLUMN][INITIAL_LINE] != NULL) {
             current_pipe_column = INITIAL_COLUMN;
             current_pipe_line = INITIAL_LINE;
@@ -251,58 +269,31 @@ bool Board::possibleNextFlowDirection(int outgoing_flow, int incoming_flow) {
     return false;
 }
 
-void Board::drawText (const char *text, SDL_Color color, int x, int y, SDL_Surface *screen)
-{
-    SDL_Rect rect = { x, y, 0, 0 };
-    SDL_Surface *TTF_Message = TTF_RenderText_Solid (font, text, color);
-
-    if (TTF_Message) {
-        if (SDL_BlitSurface(TTF_Message, NULL, screen, &rect))
-            LOG(logERROR) << "Could not write text: " << TTF_GetError() << "";
-    }
-    else {
-        LOG(logERROR) << "Could not write text: " << TTF_GetError() << "";
-    }
-
-    SDL_FreeSurface(TTF_Message);
-}
-
 void Board::drawCronometer ()
 {
     std::ostringstream out;
-    int time_left = starting_time - SDL_GetTicks() + INITIAL_DELAY;
-
-    if (time_left < 0)
-        time_left = 0;
-
-    out << "0:" << std::setfill('0') << std::setw(2) << time_left / 1000;
-
-    drawText(out.str().c_str(), text_color, CRON_OFFSET_X, CRON_OFFSET_Y, screen);
+    out << "0:" << std::setfill('0') << std::setw(2) << timer;
+    cronometer_text->Draw(out.str().c_str());
 }
 
 void Board::drawScore ()
 {
     std::ostringstream out;
-
     out << score;
-
-    drawText("Score", text_color, SCORE_LABEL_OFFSET_X, SCORE_LABEL_OFFSET_Y, screen);
-    drawText(out.str().c_str(), text_color, SCORE_OFFSET_X, SCORE_OFFSET_Y, screen);
+    score_label_text->Draw("Score");
+    score_value_text->Draw(out.str().c_str());
 }
 
 void Board::drawGameOver() {
     if (game_over_success) {
-        drawText("CONGRATULATIONS!", text_color, GAME_OVER_OFFSET_X, GAME_OVER_OFFSET_Y, screen);
+        game_over_text->Draw("CONGRATULATIONS!");
     } else {
-        drawText("GAME OVER!", text_color, GAME_OVER_OFFSET_X, GAME_OVER_OFFSET_Y, screen);
+        game_over_text->Draw("GAME OVER!");
     }
 }
 
 void Board::Draw ()
 {
-    // Draw background
-    SDL_BlitSurface(background, 0, screen, coordinates);
-
     // Draw all board pipes
     for (int l = 0; l < lines; l++) {
         for (int c = 0; c < columns; c++) {
@@ -400,7 +391,6 @@ bool Board::isGameOver() {
 void Board::startGame ()
 {
     score = 0;
-    flow_started = false;
-    game_over = false;
+    game_over = game_over_success = flow_started = false;
     starting_time = SDL_GetTicks();
 }
