@@ -5,6 +5,7 @@
 #include <SDL/SDL_ttf.h>
 #include "Board.h"
 #include "Splash.h"
+#include "Menu.h"
 
 enum gameState {
     STATE_SPLASH_SCREEN,
@@ -39,6 +40,7 @@ class Controller
         SDL_Rect *coordinates;
 
         Board *board;
+        Menu *menu;
         Splash *splashScreen;
         int game_state;
         int starting_time;
