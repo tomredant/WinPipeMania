@@ -13,6 +13,8 @@ class Text
         virtual ~Text();
 
         void Draw(const char *text);
+        void Draw(const char *text, int size);
+        void setFontSize(int size);
 
         SDL_Rect* getRect();
     protected:
@@ -23,6 +25,8 @@ class Text
 
         // text position
         SDL_Rect rect;
+
+        void setupFont();
 
         int font_size;
 };
