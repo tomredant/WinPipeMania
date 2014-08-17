@@ -1,5 +1,4 @@
 #include "Controller.h"
-#include "Board.h"
 #include "Log.h"
 
 Controller::Controller(SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1, SDL_Surface* pipe2, SDL_Surface *s2)
@@ -11,10 +10,21 @@ Controller::Controller(SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surfa
     pipes_sprite2 = pipe2;
     game_state = STATE_SPLASH_SCREEN;
     splashScreen = new Splash(screen, s2);
+    menu = new Menu(screen);
 }
 
 void Controller::mouseClick (int x, int y) {
     switch(game_state) {
+    case STATE_MENU:
+        switch(menu->mouseClick(x, y)) {
+        case MENU_START_GAME:
+            changeState(STATE_IN_PROGRESS);
+            break;
+        case MENU_EXIT:
+            exit(0);
+            break;
+        }
+        break;
     case STATE_IN_PROGRESS:
         board->mouseClick(x, y);
         break;
@@ -25,7 +35,7 @@ void Controller::Update() {
     switch(game_state) {
     case STATE_SPLASH_SCREEN:
         if (splashScreen->Update())
-            changeState(STATE_IN_PROGRESS);
+            changeState(STATE_MENU);
         break;
     case STATE_IN_PROGRESS:
         if(board->isGameOver()) {
@@ -44,6 +54,9 @@ void Controller::Draw() {
     switch(game_state) {
     case STATE_SPLASH_SCREEN:
         splashScreen->Draw();
+        break;
+    case STATE_MENU:
+        menu->Draw();
         break;
     case STATE_IN_PROGRESS:
         board->Draw();
