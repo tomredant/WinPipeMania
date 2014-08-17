@@ -7,8 +7,9 @@ Text::Text(SDL_Surface *s, int x, int y, int f_size)
     rect = { x, y, 0, 0 };
     color = { 0xFF };
     font_size = f_size;
+    font = NULL;
 
-    font = TTF_OpenFont(FONT_PATH, font_size);
+    setupFont();
 }
 
 Text::~Text() {
@@ -17,6 +18,22 @@ Text::~Text() {
 
 SDL_Rect* Text::getRect() {
     return &rect;
+}
+
+void Text::setFontSize(int size) {
+    if (size != font_size) {
+        // reload font
+        font_size = size;
+        setupFont();
+    }
+}
+
+void Text::setupFont() {
+    if (font != NULL) {
+        TTF_CloseFont(font);
+    }
+
+    font = TTF_OpenFont(FONT_PATH, font_size);
 }
 
 void Text::Draw(const char *text) {
@@ -35,4 +52,9 @@ void Text::Draw(const char *text) {
     }
 
     SDL_FreeSurface(TTF_Message);
+}
+
+void Text::Draw(const char *text, int size) {
+    setFontSize(size);
+    Draw(text);
 }
