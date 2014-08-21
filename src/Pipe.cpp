@@ -26,7 +26,7 @@ Pipe::Pipe(SDL_Surface *sprite_param, SDL_Surface *alt_sprite_param)
         if(r) exits += 1;
         if(d) exits += 1;
         if(l) exits += 1;
-    } while (exits < 2); // Never create blockers, unless explicity told so
+    } while (exits != 2); // Never create blockers, unless explicity told so
 
     init(sprite_param, alt_sprite_param, t, r, d, l);
 }
