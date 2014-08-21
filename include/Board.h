@@ -31,6 +31,7 @@
 #define SCORE_LABEL_OFFSET_Y 480
 #define SCORE_OFFSET_X 65
 #define SCORE_OFFSET_Y 500
+#define SCORE_FONT_SIZE 20
 #define GAME_OVER_OFFSET_X 400
 #define GAME_OVER_OFFSET_Y 300
 
@@ -84,7 +85,7 @@ class Board
         int starting_time;
 
         // game score
-        int score;
+        int score, score_font_size, score_timer;
 
         // the starting timer
         int timer, last_ticks;
@@ -106,6 +107,7 @@ class Board
         void rotatePool (void);
 
         void updateCronometer();
+        void updateScore();
         void updatePipes();
         void updateStartingFlow();
         void updateNextPipe();

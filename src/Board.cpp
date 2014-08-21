@@ -21,9 +21,11 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* pipe1, SDL_Surface* pipe
     timer = INITIAL_TIMER;
     last_ticks = 0;
 
+    score_font_size = SCORE_FONT_SIZE;
+
     cronometer_text = new Text(screen, CRON_OFFSET_X, CRON_OFFSET_Y, 20);
     score_label_text = new Text(screen, SCORE_LABEL_OFFSET_X, SCORE_LABEL_OFFSET_Y, 20);
-    score_value_text = new Text(screen, SCORE_OFFSET_X, SCORE_OFFSET_Y, 20);
+    score_value_text = new Text(screen, SCORE_OFFSET_X, SCORE_OFFSET_Y, score_font_size);
     game_over_text = new Text(screen, GAME_OVER_OFFSET_X, GAME_OVER_OFFSET_Y, 30);
 
     // Game board positions
@@ -143,6 +145,7 @@ Pipe* Board::getNextPipe(const int direction, int *column, int *line, int *flow)
 
 void Board::Update() {
     updateCronometer();
+    updateScore();
     updatePipes();
     updateStartingFlow();
     updateNextPipe();
@@ -159,6 +162,22 @@ void Board::updateCronometer() {
 
     if (timer < 0)
         timer = 0;
+}
+
+void Board::updateScore() {
+    if(score_font_size > SCORE_FONT_SIZE) {
+        // initializes the timer
+        if(!score_timer) {
+            score_timer = SDL_GetTicks();
+        }
+
+        int current_time = SDL_GetTicks();
+
+        if(current_time > score_timer + 50) {
+          score_font_size -= 3;
+          score_timer = current_time;
+        }
+    }
 }
 
 void Board::updatePipes() {
@@ -191,7 +210,6 @@ void Board::updateNextPipe() {
             successfulGameOver();
             return;
         }
-
 
         int flow_direction = getCurrentPipe()->getFlowTurnPosition();
         int next_flow;
@@ -282,7 +300,7 @@ void Board::drawScore ()
     std::ostringstream out;
     out << score;
     score_label_text->Draw("Score");
-    score_value_text->Draw(out.str().c_str());
+    score_value_text->Draw(out.str().c_str(), score_font_size);
 }
 
 void Board::drawGameOver() {
@@ -369,6 +387,7 @@ void Board::startCurrentPipeFlow(int direction) {
 
 void Board::addScore(int points) {
     score += points;
+    score_font_size = SCORE_FONT_SIZE + 20;
 
     if(score < 0)
         score = 0;
