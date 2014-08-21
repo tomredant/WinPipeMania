@@ -81,6 +81,7 @@ void Board::mouseClick (int x, int y)
 
         // Get top of the pool
         *pipe = pool[0];
+        cronometer_started = true;
         rotatePool();
     }
 }
@@ -152,16 +153,18 @@ void Board::Update() {
 }
 
 void Board::updateCronometer() {
-    int current_ticks = SDL_GetTicks();
+    if(cronometer_started) {
+        int current_ticks = SDL_GetTicks();
 
-    // decreases every second
-    if (current_ticks > last_ticks + 1000) {
-        timer -= 1;
-        last_ticks = current_ticks;
+        // decreases every second
+        if (current_ticks > last_ticks + 1000) {
+            timer -= 1;
+            last_ticks = current_ticks;
+        }
+
+        if (timer < 0)
+            timer = 0;
     }
-
-    if (timer < 0)
-        timer = 0;
 }
 
 void Board::updateScore() {
@@ -411,6 +414,6 @@ bool Board::isGameOver() {
 void Board::startGame ()
 {
     score = 0;
-    game_over = game_over_success = flow_started = false;
+    game_over = game_over_success = flow_started = cronometer_started = false;
     starting_time = SDL_GetTicks();
 }

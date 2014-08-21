@@ -35,7 +35,7 @@
 #define GAME_OVER_OFFSET_X 400
 #define GAME_OVER_OFFSET_Y 300
 
-#define BLOCKED_POSITIONS 4
+#define BLOCKED_POSITIONS 30
 
 using namespace std;
 
@@ -78,8 +78,7 @@ class Board
         int current_pipe_line, current_pipe_column;
 
         // Flags if the game finished
-        bool game_over;
-        bool game_over_success;
+        bool game_over, game_over_success;
 
         // the time the game started
         int starting_time;
@@ -91,7 +90,7 @@ class Board
         int timer, last_ticks;
 
         // flags if the flow has started
-        bool flow_started;
+        bool flow_started, cronometer_started;
 
         static const int x_offset, y_offset;
         static const int slotSize;
