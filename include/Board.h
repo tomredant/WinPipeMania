@@ -170,6 +170,8 @@ class Board
             Successful game over logic.
         */
         void successfulGameOver();
+
+        int countMiddleRowBlocks();
 };
 
 #endif // BOARD_H

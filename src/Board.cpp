@@ -50,6 +50,18 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* pipe1, SDL_Surface* pipe
         slots[line][column] = pipe;
     }
 
+    // make sure the middle line has at least 2 blocks
+    LOG(logDEBUG) << "countMiddleRowBlocks " << countMiddleRowBlocks();
+
+    while(countMiddleRowBlocks() < 2) {
+        LOG(logDEBUG) << "countMiddleRowBlocks " << countMiddleRowBlocks();
+
+        Pipe* pipe = new Pipe(pipes_sprite1, pipes_sprite2, false, false, false, false);
+        pipe->block();
+
+        slots[rand() % BOARD_COLUMNS][INITIAL_LINE] = pipe;
+    }
+
     // Pool
     for (int p = 0; p < POOL_SIZE; p++) {
         pool[p] = new Pipe(pipes_sprite1, pipes_sprite2);
@@ -416,4 +428,16 @@ void Board::startGame ()
     score = 0;
     game_over = game_over_success = flow_started = cronometer_started = false;
     starting_time = SDL_GetTicks();
+}
+
+int Board::countMiddleRowBlocks() {
+    int count = 0;
+
+    for(int i = 0; i < columns; i++) {
+        if(slots[i][INITIAL_LINE]) {
+            count++;
+        }
+    }
+
+    return count;
 }
