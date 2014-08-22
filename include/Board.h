@@ -18,7 +18,7 @@
 #define POOL_TOP_x 944
 #define POOL_TOP_Y 312
 
-#define INITIAL_TIMER 10
+#define INITIAL_TIMER 25
 #define INITIAL_COLUMN 0
 #define INITIAL_LINE   7
 #define FINAL_COLUMN 13
@@ -35,7 +35,7 @@
 #define GAME_OVER_OFFSET_X 400
 #define GAME_OVER_OFFSET_Y 300
 
-#define BLOCKED_POSITIONS 30
+#define BLOCKED_POSITIONS 70
 
 using namespace std;
 
