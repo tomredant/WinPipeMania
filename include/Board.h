@@ -33,6 +33,8 @@
 #define SCORE_OFFSET_Y 500
 #define GAME_OVER_OFFSET_X 400
 #define GAME_OVER_OFFSET_Y 300
+#define PLAY_AGAIN_OFFSET_X 400
+#define PLAY_AGAIN_OFFSET_Y 350
 
 #define BLOCKED_POSITIONS 4
 
@@ -97,6 +99,7 @@ class Board
         static const int lines, columns;
 
         Text *cronometer_text, *score_label_text, *score_value_text, *game_over_text;
+        Text *play_again;
 
         void drawCronometer ();
         void drawScore ();
