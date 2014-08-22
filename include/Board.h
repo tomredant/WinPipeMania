@@ -172,6 +172,7 @@ class Board
         void successfulGameOver();
 
         int countMiddleRowBlocks();
+        void blockPosition(int column, int line);
 };
 
 #endif // BOARD_H
