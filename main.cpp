@@ -113,10 +113,12 @@ int main ( int argc, char** argv )
 
             case SDL_MOUSEBUTTONDOWN:
                 {
-                    int x, y;
-                    SDL_GetMouseState(&x, &y);
-                    controller.mouseClick(x, y);
-                    break;
+                    if(event.button.button == SDL_BUTTON_LEFT) {
+                        int x, y;
+                        SDL_GetMouseState(&x, &y);
+                        controller.mouseClick(x, y);
+                        break;
+                    }
                 }
             }
 
