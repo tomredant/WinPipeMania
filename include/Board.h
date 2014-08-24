@@ -18,7 +18,7 @@
 #define POOL_TOP_x 944
 #define POOL_TOP_Y 312
 
-#define INITIAL_TIMER 10
+#define INITIAL_TIMER 25
 #define INITIAL_COLUMN 0
 #define INITIAL_LINE   7
 #define FINAL_COLUMN 13
@@ -31,10 +31,11 @@
 #define SCORE_LABEL_OFFSET_Y 480
 #define SCORE_OFFSET_X 65
 #define SCORE_OFFSET_Y 500
+#define SCORE_FONT_SIZE 20
 #define GAME_OVER_OFFSET_X 400
 #define GAME_OVER_OFFSET_Y 300
 
-#define BLOCKED_POSITIONS 4
+#define BLOCKED_POSITIONS 70
 
 using namespace std;
 
@@ -77,20 +78,19 @@ class Board
         int current_pipe_line, current_pipe_column;
 
         // Flags if the game finished
-        bool game_over;
-        bool game_over_success;
+        bool game_over, game_over_success;
 
         // the time the game started
         int starting_time;
 
         // game score
-        int score;
+        int score, score_font_size, score_timer;
 
         // the starting timer
         int timer, last_ticks;
 
         // flags if the flow has started
-        bool flow_started;
+        bool flow_started, cronometer_started;
 
         static const int x_offset, y_offset;
         static const int slotSize;
@@ -106,6 +106,7 @@ class Board
         void rotatePool (void);
 
         void updateCronometer();
+        void updateScore();
         void updatePipes();
         void updateStartingFlow();
         void updateNextPipe();
@@ -169,6 +170,9 @@ class Board
             Successful game over logic.
         */
         void successfulGameOver();
+
+        int countMiddleRowBlocks();
+        void blockPosition(int column, int line);
 };
 
 #endif // BOARD_H

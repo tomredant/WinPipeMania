@@ -8,7 +8,7 @@ Controller::Controller(SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surfa
     background = back;
     pipes_sprite1 = pipe1;
     pipes_sprite2 = pipe2;
-    game_state = STATE_SPLASH_SCREEN;
+    game_state = STATE_MENU;
     splashScreen = new Splash(screen, s2);
     menu = new Menu(screen);
 }

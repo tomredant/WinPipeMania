@@ -21,9 +21,11 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* pipe1, SDL_Surface* pipe
     timer = INITIAL_TIMER;
     last_ticks = 0;
 
+    score_font_size = SCORE_FONT_SIZE;
+
     cronometer_text = new Text(screen, CRON_OFFSET_X, CRON_OFFSET_Y, 20);
     score_label_text = new Text(screen, SCORE_LABEL_OFFSET_X, SCORE_LABEL_OFFSET_Y, 20);
-    score_value_text = new Text(screen, SCORE_OFFSET_X, SCORE_OFFSET_Y, 20);
+    score_value_text = new Text(screen, SCORE_OFFSET_X, SCORE_OFFSET_Y, score_font_size);
     game_over_text = new Text(screen, GAME_OVER_OFFSET_X, GAME_OVER_OFFSET_Y, 30);
 
     // Game board positions
@@ -42,10 +44,12 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* pipe1, SDL_Surface* pipe
             line   = rand() % BOARD_LINES;
         } while(slots[line][column]);
 
-        Pipe* pipe = new Pipe(pipes_sprite1, pipes_sprite2, false, false, false, false);
-        pipe->block();
+        blockPosition(column, line);
+    }
 
-        slots[line][column] = pipe;
+    // make sure the middle line has at least 2 blocks
+    while(countMiddleRowBlocks() < 2) {
+        blockPosition(rand() % BOARD_COLUMNS, INITIAL_LINE);
     }
 
     // Pool
@@ -79,6 +83,7 @@ void Board::mouseClick (int x, int y)
 
         // Get top of the pool
         *pipe = pool[0];
+        cronometer_started = true;
         rotatePool();
     }
 }
@@ -143,22 +148,41 @@ Pipe* Board::getNextPipe(const int direction, int *column, int *line, int *flow)
 
 void Board::Update() {
     updateCronometer();
+    updateScore();
     updatePipes();
     updateStartingFlow();
     updateNextPipe();
 }
 
 void Board::updateCronometer() {
-    int current_ticks = SDL_GetTicks();
+    if(cronometer_started) {
+        int current_ticks = SDL_GetTicks();
 
-    // decreases every second
-    if (current_ticks > last_ticks + 1000) {
-        timer -= 1;
-        last_ticks = current_ticks;
+        // decreases every second
+        if (current_ticks > last_ticks + 1000) {
+            timer -= 1;
+            last_ticks = current_ticks;
+        }
+
+        if (timer < 0)
+            timer = 0;
     }
+}
 
-    if (timer < 0)
-        timer = 0;
+void Board::updateScore() {
+    if(score_font_size > SCORE_FONT_SIZE) {
+        // initializes the timer
+        if(!score_timer) {
+            score_timer = SDL_GetTicks();
+        }
+
+        int current_time = SDL_GetTicks();
+
+        if(current_time > score_timer + 50) {
+          score_font_size -= 3;
+          score_timer = current_time;
+        }
+    }
 }
 
 void Board::updatePipes() {
@@ -191,7 +215,6 @@ void Board::updateNextPipe() {
             successfulGameOver();
             return;
         }
-
 
         int flow_direction = getCurrentPipe()->getFlowTurnPosition();
         int next_flow;
@@ -282,7 +305,7 @@ void Board::drawScore ()
     std::ostringstream out;
     out << score;
     score_label_text->Draw("Score");
-    score_value_text->Draw(out.str().c_str());
+    score_value_text->Draw(out.str().c_str(), score_font_size);
 }
 
 void Board::drawGameOver() {
@@ -369,6 +392,7 @@ void Board::startCurrentPipeFlow(int direction) {
 
 void Board::addScore(int points) {
     score += points;
+    score_font_size = SCORE_FONT_SIZE + 20;
 
     if(score < 0)
         score = 0;
@@ -392,6 +416,31 @@ bool Board::isGameOver() {
 void Board::startGame ()
 {
     score = 0;
-    game_over = game_over_success = flow_started = false;
+    game_over = game_over_success = flow_started = cronometer_started = false;
     starting_time = SDL_GetTicks();
+}
+
+int Board::countMiddleRowBlocks() {
+    int count = 0;
+
+    for(int i = 0; i < columns; i++) {
+        if(slots[i][INITIAL_LINE]) {
+            count++;
+        }
+    }
+
+    return count;
+}
+
+void Board::blockPosition(int column, int line) {
+    // never block first and last positions
+    if((line == INITIAL_LINE && column == INITIAL_COLUMN) ||
+       line == FINAL_LINE && column == FINAL_COLUMN) {
+        return;
+    }
+
+    Pipe* pipe = new Pipe(pipes_sprite1, pipes_sprite2, false, false, false, false);
+    pipe->block();
+
+    slots[column][line] = pipe;
 }
