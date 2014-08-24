@@ -40,7 +40,7 @@ class Controller
         SDL_Rect *coordinates;
 
         Board *board;
-        Menu *menu;
+        Menu *startMenu, *endMenu;
         Splash *splashScreen;
         int game_state;
         int starting_time;

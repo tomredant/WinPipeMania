@@ -10,13 +10,21 @@ Controller::Controller(SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surfa
     pipes_sprite2 = pipe2;
     game_state = STATE_MENU;
     splashScreen = new Splash(screen, s2);
-    menu = new Menu(screen);
+    // Create start menu
+    startMenu = new Menu();
+    startMenu->addButton(new Button("START GAME", new Text(screen, START_MENU_OFFSET_X, START_MENU_OFFSET_Y, MENU_SIZE), MENU_START_GAME, MENU_SIZE, MENU_HOVER_SIZE));
+    startMenu->addButton(new Button("EXIT", new Text(screen, EXIT_MENU_OFFSET_X, EXIT_MENU_OFFSET_Y, MENU_SIZE), MENU_EXIT, MENU_SIZE, MENU_HOVER_SIZE));
+
+    // Create end Menu
+    endMenu = new Menu();
+    endMenu->addButton(new Button("YES", new Text(screen, PLAY_AGAIN_YES_OFFSET_X, PLAY_AGAIN_YES_OFFSET_Y, MENU_SIZE), MENU_PLAY_AGAIN_YES, MENU_SIZE, MENU_HOVER_SIZE));
+    endMenu->addButton(new Button("NO", new Text(screen, PLAY_AGAIN_NO_OFFSET_X, PLAY_AGAIN_NO_OFFSET_Y, MENU_SIZE), MENU_PLAY_AGAIN_NO, MENU_SIZE, MENU_HOVER_SIZE));
 }
 
 void Controller::mouseClick (int x, int y) {
     switch(game_state) {
     case STATE_MENU:
-        switch(menu->mouseClick(x, y)) {
+        switch(startMenu->mouseClick(x, y)) {
         case MENU_START_GAME:
             changeState(STATE_IN_PROGRESS);
             break;
@@ -27,6 +35,16 @@ void Controller::mouseClick (int x, int y) {
         break;
     case STATE_IN_PROGRESS:
         board->mouseClick(x, y);
+        break;
+    case STATE_GAME_OVER:
+        switch(endMenu->mouseClick(x, y)) {
+        case MENU_PLAY_AGAIN_YES:
+            changeState(STATE_IN_PROGRESS);
+            break;
+        case MENU_PLAY_AGAIN_NO:
+            exit(0);
+            break;
+        }
         break;
     }
 }
@@ -43,6 +61,8 @@ void Controller::Update() {
         } else {
             board->Update();
         }
+    case STATE_GAME_OVER:
+        board->Update();
         break;
     }
 }
@@ -56,13 +76,14 @@ void Controller::Draw() {
         splashScreen->Draw();
         break;
     case STATE_MENU:
-        menu->Draw();
+        startMenu->Draw();
         break;
     case STATE_IN_PROGRESS:
         board->Draw();
         break;
     case STATE_GAME_OVER:
         board->Draw();
+        endMenu->Draw();
         break;
     }
 }

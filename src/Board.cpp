@@ -27,6 +27,7 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* pipe1, SDL_Surface* pipe
     score_label_text = new Text(screen, SCORE_LABEL_OFFSET_X, SCORE_LABEL_OFFSET_Y, 20);
     score_value_text = new Text(screen, SCORE_OFFSET_X, SCORE_OFFSET_Y, score_font_size);
     game_over_text = new Text(screen, GAME_OVER_OFFSET_X, GAME_OVER_OFFSET_Y, 30);
+    play_again = new Text(screen, PLAY_AGAIN_OFFSET_X, PLAY_AGAIN_OFFSET_Y, 20);
 
     // Game board positions
     for (int line = 0; line < lines; line++) {
@@ -314,6 +315,8 @@ void Board::drawGameOver() {
     } else {
         game_over_text->Draw("GAME OVER!");
     }
+
+    play_again->Draw("PLAY AGAIN ?");
 }
 
 void Board::Draw ()
