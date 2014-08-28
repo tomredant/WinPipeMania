@@ -31,6 +31,9 @@ int main ( int argc, char** argv )
     // make sure SDL cleans up before exit
     atexit(SDL_Quit);
 
+    // Set title
+    SDL_WM_SetCaption("PipeMania", NULL);
+
     // initialize TTF library
     if ( TTF_Init() < 0 ) {
         fprintf(stderr, "Unable to initialize SDL_ttf: %s \n", TTF_GetError());
