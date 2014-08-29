@@ -10,6 +10,7 @@
 enum gameState {
     STATE_SPLASH_SCREEN,
     STATE_MENU,
+    STATE_MENU_LEVEL,
     STATE_IN_PROGRESS,
     STATE_GAME_OVER,
 };
@@ -40,11 +41,12 @@ class Controller
         SDL_Rect *coordinates;
 
         Board *board;
-        Menu *startMenu, *endMenu;
+        Menu *startMenu, *endMenu, *levelMenu;
         Splash *splashScreen;
         int game_state;
         int starting_time;
         int splashAlpha;
+        int mLevel;
 
         void startGame();
         void changeState (gameState new_state);

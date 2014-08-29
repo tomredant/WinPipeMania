@@ -60,7 +60,7 @@ class Board
         SDL_Rect getSlotScreenPosition (int line, int column);
 
         /*! Updates the board data */
-        void Update ();
+        void Update (int level);
 
         /*! Draw board and pipes on screen */
         void Draw ();
@@ -110,7 +110,7 @@ class Board
 
         void updateCronometer();
         void updateScore();
-        void updatePipes();
+        void updatePipes (int level);
         void updateStartingFlow();
         void updateNextPipe();
 

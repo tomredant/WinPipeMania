@@ -128,12 +128,12 @@ void Pipe::Draw(SDL_Surface* surface, SDL_Rect* position, bool connected) {
     }
 }
 
-void Pipe::Update() {
+void Pipe::Update (int speed) {
   if(flowed_pixels < PIPE_SIZE && flow == true) {
     int current_time = SDL_GetTicks();
 
-    if(current_time > time + FLOW_SPEED) {
-      flowed_pixels += 2;
+    if(current_time > time + (speed / 2)) { // 250 / 2
+      flowed_pixels += speed / 125; // 250 / 125 = 2
       time = current_time;
     }
   }

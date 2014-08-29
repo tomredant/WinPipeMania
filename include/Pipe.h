@@ -7,7 +7,7 @@
 #define FLOW_LENGTH 2
 
 // 1 pixel every 125 miliseconds to fill the SIZE in 6 seconds
-#define FLOW_SPEED 125
+//#define FLOW_SPEED 125
 
 // flow start points
 #define FLOW_TOP    1
@@ -45,7 +45,7 @@ class Pipe
         /*
             Updates the pipe draw data.
         */
-        void Update();
+        void Update (int speed);
 
         /*
             Starts flowing water through this pipe.

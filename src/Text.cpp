@@ -48,6 +48,9 @@ void Text::Draw(const char *text) {
     rect.w = w;
     rect.h = h;
 
+    // Centre text
+    //rect.x = (screen->w - w) / 2;
+
     SDL_Surface *TTF_Message = TTF_RenderText_Solid (font, text, color);
 
     if (TTF_Message) {

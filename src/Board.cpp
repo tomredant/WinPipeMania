@@ -146,10 +146,10 @@ Pipe* Board::getNextPipe(const int direction, int *column, int *line, int *flow)
     return getPipe(*column, *line);
 }
 
-void Board::Update() {
+void Board::Update (int level) {
     updateCronometer();
     updateScore();
-    updatePipes();
+    updatePipes(level);
     updateStartingFlow();
     updateNextPipe();
 }
@@ -185,11 +185,11 @@ void Board::updateScore() {
     }
 }
 
-void Board::updatePipes() {
+void Board::updatePipes (int level) {
     for (int l = 0; l < lines; l++) {
         for (int c = 0; c < columns; c++) {
             if (slots[l][c] != NULL) {
-                slots[l][c]->Update();
+                slots[l][c]->Update(level);
             }
         }
     }
