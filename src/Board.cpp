@@ -23,11 +23,10 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* pipe1, SDL_Surface* pipe
 
     score_font_size = SCORE_FONT_SIZE;
 
-    cronometer_text = new Text(screen, CRON_OFFSET_X, CRON_OFFSET_Y, 20);
-    score_label_text = new Text(screen, SCORE_LABEL_OFFSET_X, SCORE_LABEL_OFFSET_Y, 20);
-    score_value_text = new Text(screen, SCORE_OFFSET_X, SCORE_OFFSET_Y, score_font_size);
-    game_over_text = new Text(screen, GAME_OVER_OFFSET_X, GAME_OVER_OFFSET_Y, 30);
-    play_again = new Text(screen, PLAY_AGAIN_OFFSET_X, PLAY_AGAIN_OFFSET_Y, 20);
+    cronometer_text = new Text(screen, CRON_OFFSET_X, CRON_OFFSET_Y, 20, "");
+    score_label_text = new Text(screen, SCORE_LABEL_OFFSET_X, SCORE_LABEL_OFFSET_Y, 20, "");
+    score_value_text = new Text(screen, SCORE_OFFSET_X, SCORE_OFFSET_Y, score_font_size, "");
+    game_over_text = new Text(screen, GAME_OVER_OFFSET_X, GAME_OVER_OFFSET_Y, 30, "");
 
     // Game board positions
     for (int line = 0; line < lines; line++) {
@@ -309,14 +308,16 @@ void Board::drawScore ()
     score_value_text->Draw(out.str().c_str(), score_font_size);
 }
 
-void Board::drawGameOver() {
+Text* Board::getGameOverText ()
+{
     if (game_over_success) {
-        game_over_text->Draw("CONGRATULATIONS!");
-    } else {
-        game_over_text->Draw("GAME OVER!");
+        game_over_text->setText("CONGRATULATIONS!");
+    }
+    else {
+        game_over_text->setText("GAME OVER!");
     }
 
-    play_again->Draw("PLAY AGAIN ?");
+    return game_over_text;
 }
 
 void Board::Draw ()
@@ -347,10 +348,6 @@ void Board::Draw ()
 
     drawCronometer();
     drawScore();
-
-    if (game_over) {
-        drawGameOver();
-    }
 }
 
 bool Board::isPipeConnected(int col, int line) {

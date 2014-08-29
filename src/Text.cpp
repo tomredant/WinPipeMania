@@ -1,13 +1,14 @@
 #include "Text.h"
 #include "Log.h"
 
-Text::Text(SDL_Surface *s, int x, int y, int f_size)
+Text::Text(SDL_Surface *s, int x, int y, int f_size, std::string t)
 {
     screen = s;
     rect = { x, y, 0, 0 };
     color = { 0xFF };
     font_size = f_size;
     font = NULL;
+    text = t;
 
     setupFont();
 }
@@ -36,6 +37,11 @@ void Text::setupFont() {
     font = TTF_OpenFont(FONT_PATH, font_size);
 }
 
+void Text::setText (std::string s)
+{
+    text = s;
+}
+
 void Text::Draw(const char *text) {
     int w, h;
     TTF_SizeText(font, text, &w, &h);
@@ -52,6 +58,17 @@ void Text::Draw(const char *text) {
     }
 
     SDL_FreeSurface(TTF_Message);
+}
+
+void Text::Draw ()
+{
+    Draw(text.c_str());
+}
+
+void Text::Draw (int size)
+{
+    setFontSize(size);
+    Draw();
 }
 
 void Text::Draw(const char *text, int size) {

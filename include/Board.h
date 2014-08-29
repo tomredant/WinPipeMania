@@ -69,6 +69,8 @@ class Board
         bool isGameOver();
 
         void startGame();
+
+        Text* getGameOverText ();
     protected:
     private:
         SDL_Surface *screen, *pipes_sprite1, *pipes_sprite2;
@@ -99,11 +101,9 @@ class Board
         static const int lines, columns;
 
         Text *cronometer_text, *score_label_text, *score_value_text, *game_over_text;
-        Text *play_again;
 
         void drawCronometer ();
         void drawScore ();
-        void drawGameOver ();
         void drawText (const char *text, SDL_Color color, int x, int y, SDL_Surface *screen);
 
         void rotatePool (void);

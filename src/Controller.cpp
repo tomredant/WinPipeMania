@@ -11,14 +11,15 @@ Controller::Controller(SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surfa
     game_state = STATE_SPLASH_SCREEN;
     splashScreen = new Splash(screen, s2);
     // Create start menu
-    startMenu = new Menu();
-    startMenu->addButton(new Button("START GAME", new Text(screen, START_MENU_OFFSET_X, START_MENU_OFFSET_Y, MENU_SIZE), MENU_START_GAME, MENU_SIZE, MENU_HOVER_SIZE));
-    startMenu->addButton(new Button("EXIT", new Text(screen, EXIT_MENU_OFFSET_X, EXIT_MENU_OFFSET_Y, MENU_SIZE), MENU_EXIT, MENU_SIZE, MENU_HOVER_SIZE));
+    startMenu = new Menu(screen);
+    startMenu->addButton(new Button(new Text(screen, START_MENU_OFFSET_X, START_MENU_OFFSET_Y, MENU_SIZE, "START GAME"), MENU_START_GAME, MENU_SIZE, MENU_HOVER_SIZE));
+    startMenu->addButton(new Button(new Text(screen, EXIT_MENU_OFFSET_X, EXIT_MENU_OFFSET_Y, MENU_SIZE, "EXIT"), MENU_EXIT, MENU_SIZE, MENU_HOVER_SIZE));
 
     // Create end Menu
-    endMenu = new Menu();
-    endMenu->addButton(new Button("YES", new Text(screen, PLAY_AGAIN_YES_OFFSET_X, PLAY_AGAIN_YES_OFFSET_Y, MENU_SIZE), MENU_PLAY_AGAIN_YES, MENU_SIZE, MENU_HOVER_SIZE));
-    endMenu->addButton(new Button("NO", new Text(screen, PLAY_AGAIN_NO_OFFSET_X, PLAY_AGAIN_NO_OFFSET_Y, MENU_SIZE), MENU_PLAY_AGAIN_NO, MENU_SIZE, MENU_HOVER_SIZE));
+    endMenu = new Menu(screen);
+    endMenu->addButton(new Button(new Text(screen, PLAY_AGAIN_YES_OFFSET_X, PLAY_AGAIN_YES_OFFSET_Y, MENU_SIZE, "YES"), MENU_PLAY_AGAIN_YES, MENU_SIZE, MENU_HOVER_SIZE));
+    endMenu->addButton(new Button(new Text(screen, PLAY_AGAIN_NO_OFFSET_X, PLAY_AGAIN_NO_OFFSET_Y, MENU_SIZE, "NO"), MENU_PLAY_AGAIN_NO, MENU_SIZE, MENU_HOVER_SIZE));
+    endMenu->addText(new Text(screen, PLAY_AGAIN_OFFSET_X, PLAY_AGAIN_OFFSET_Y, 20, "Play again ?"));
 }
 
 void Controller::mouseClick (int x, int y) {
@@ -83,7 +84,7 @@ void Controller::Draw() {
         break;
     case STATE_GAME_OVER:
         board->Draw();
-        endMenu->Draw();
+        endMenu->Draw(board->getGameOverText());
         break;
     }
 }

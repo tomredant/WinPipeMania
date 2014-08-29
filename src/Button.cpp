@@ -1,8 +1,7 @@
 #include "Button.h"
 
-Button::Button (char *s, Text *t, int c, int _size, int _hover_size)
+Button::Button (Text *t, int c, int _size, int _hover_size)
 {
-    str = s;
     text = t;
     code = c;
     size = _size;
@@ -19,7 +18,7 @@ void Button::Draw ()
         menu_size = hover_size;
     }
 
-    text->Draw(str, menu_size);
+    text->Draw(menu_size);
 }
 
 bool Button::mouseInBoundary (int x, int y)
