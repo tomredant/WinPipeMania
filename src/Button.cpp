@@ -1,9 +1,9 @@
 #include "Button.h"
 
-Button::Button (Text *t, int c, int _size, int _hover_size)
+Button::Button (Text *t, eMenuOptions option, int _size, int _hover_size)
 {
     text = t;
-    code = c;
+    mOption = option;
     size = _size;
     hover_size = _hover_size;
 }
@@ -26,7 +26,7 @@ bool Button::mouseInBoundary (int x, int y)
     return (x >= text->getRect()->x && x <= (text->getRect()->x + text->getRect()->w)) && (y >= text->getRect()->y && y <= (text->getRect()->y + text->getRect()->h));
 }
 
-int Button::getCode ()
+eMenuOptions Button::getOption ()
 {
-    return code;
+    return mOption;
 }

@@ -26,7 +26,7 @@ int Menu::mouseClick (int x, int y)
 
         // button clicked ?
         if (button->mouseInBoundary(x, y)) {
-            return button->getCode();
+            return button->getOption();
         }
     }
 

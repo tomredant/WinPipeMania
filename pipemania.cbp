@@ -65,6 +65,7 @@
 		<Unit filename="include/Board.h" />
 		<Unit filename="include/Button.h" />
 		<Unit filename="include/Controller.h" />
+		<Unit filename="include/Defines.h" />
 		<Unit filename="include/Log.h" />
 		<Unit filename="include/Menu.h" />
 		<Unit filename="include/Pipe.h" />
