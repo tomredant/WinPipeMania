@@ -18,6 +18,7 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* pipe1, SDL_Surface* pipe
     coordinates = c;
     pipes_sprite1 = pipe1;
     pipes_sprite2 = pipe2;
+    m_level = LEVEL_NORMAL;
     timer = INITIAL_TIMER;
     last_ticks = 0;
 
@@ -146,10 +147,10 @@ Pipe* Board::getNextPipe(const int direction, int *column, int *line, int *flow)
     return getPipe(*column, *line);
 }
 
-void Board::Update (int level) {
+void Board::Update () {
     updateCronometer();
     updateScore();
-    updatePipes(level);
+    updatePipes(m_level);
     updateStartingFlow();
     updateNextPipe();
 }
@@ -185,7 +186,7 @@ void Board::updateScore() {
     }
 }
 
-void Board::updatePipes (int level) {
+void Board::updatePipes (eLevel level) {
     for (int l = 0; l < lines; l++) {
         for (int c = 0; c < columns; c++) {
             if (slots[l][c] != NULL) {
@@ -420,6 +421,21 @@ void Board::startGame ()
     starting_time = SDL_GetTicks();
 }
 
+void Board::stopGame ()
+{
+    // Clean all Pipes
+    for (int line = 0; line < lines; line++) {
+        for (int column = 0; column < columns; column++) {
+            Pipe **pipe = &slots[line][column];
+
+            if (*pipe) {
+                delete *pipe;
+                *pipe = NULL;
+            }
+        }
+    }
+}
+
 int Board::countMiddleRowBlocks() {
     int count = 0;
 
@@ -443,4 +459,9 @@ void Board::blockPosition(int column, int line) {
     pipe->block();
 
     slots[column][line] = pipe;
+}
+
+void Board::setLevel (eLevel level)
+{
+    m_level = level;
 }

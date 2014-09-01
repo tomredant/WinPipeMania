@@ -10,7 +10,7 @@ Controller::Controller(SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surfa
     pipes_sprite2 = pipe2;
     game_state = STATE_SPLASH_SCREEN;
     splashScreen = new Splash(screen, s2);
-    mLevel = 250;
+    board = new Board(screen, coordinates, pipes_sprite1, pipes_sprite2);
 
     // Create start menu
     startMenu = new Menu(screen);
@@ -22,7 +22,7 @@ Controller::Controller(SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surfa
     endMenu = new Menu(screen);
     endMenu->addButton(new Button(new Text(screen, PLAY_AGAIN_YES_OFFSET_X, PLAY_AGAIN_YES_OFFSET_Y, MENU_SIZE, "YES"), MENU_PLAY_AGAIN_YES, MENU_SIZE, MENU_HOVER_SIZE));
     endMenu->addButton(new Button(new Text(screen, PLAY_AGAIN_NO_OFFSET_X, PLAY_AGAIN_NO_OFFSET_Y, MENU_SIZE, "NO"), MENU_PLAY_AGAIN_NO, MENU_SIZE, MENU_HOVER_SIZE));
-    endMenu->addText(new Text(screen, PLAY_AGAIN_OFFSET_X, PLAY_AGAIN_OFFSET_Y, 20, "Play again ?"));
+    endMenu->addText(new Text(screen, PLAY_AGAIN_OFFSET_X, PLAY_AGAIN_OFFSET_Y, MENU_SIZE, "Play again ?"));
 
     // Create level Menu
     levelMenu = new Menu(screen);
@@ -50,13 +50,13 @@ void Controller::mouseClick (int x, int y) {
     case STATE_MENU_LEVEL:
         switch (levelMenu->mouseClick(x, y)) {
         case MENU_LEVEL_EASY:
-            mLevel = 500;
+            board->setLevel(LEVEL_EASY);
             break;
         case MENU_LEVEL_NORMAL:
-            mLevel = 250;
+            board->setLevel(LEVEL_NORMAL);
             break;
         case MENU_LEVEL_HARD:
-            mLevel = 125;
+            board->setLevel(LEVEL_HARD);
             break;
         }
         changeState(STATE_MENU);
@@ -87,10 +87,10 @@ void Controller::Update() {
         if(board->isGameOver()) {
             changeState(STATE_GAME_OVER);
         } else {
-            board->Update(mLevel);
+            board->Update();
         }
     case STATE_GAME_OVER:
-        board->Update(250);
+        board->Update();
         break;
     }
 }
@@ -121,7 +121,7 @@ void Controller::Draw() {
 
 void Controller::startGame()
 {
-    board = new Board(screen, coordinates, pipes_sprite1, pipes_sprite2);
+    board->stopGame();
     board->startGame();
 }
 

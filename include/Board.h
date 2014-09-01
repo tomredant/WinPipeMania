@@ -4,40 +4,9 @@
 #include <SDL/SDL.h>
 #include <string>
 
+#include "Defines.h"
 #include "Pipe.h"
 #include "Text.h"
-
-#define BOARD_LINES 14
-#define BOARD_COLUMNS 14
-
-#define POOL_SIZE 5
-
-#define POOL_OFFSET_X 944
-#define POOL_OFFSET_Y 38
-#define POOL_SPACING 61
-#define POOL_TOP_x 944
-#define POOL_TOP_Y 312
-
-#define INITIAL_TIMER 25
-#define INITIAL_COLUMN 0
-#define INITIAL_LINE   7
-#define FINAL_COLUMN 13
-#define FINAL_LINE   7
-
-#define CRON_OFFSET_X 80
-#define CRON_OFFSET_Y 80
-
-#define SCORE_LABEL_OFFSET_X 65
-#define SCORE_LABEL_OFFSET_Y 480
-#define SCORE_OFFSET_X 65
-#define SCORE_OFFSET_Y 500
-#define SCORE_FONT_SIZE 20
-#define GAME_OVER_OFFSET_X 400
-#define GAME_OVER_OFFSET_Y 300
-#define PLAY_AGAIN_OFFSET_X 400
-#define PLAY_AGAIN_OFFSET_Y 350
-
-#define BLOCKED_POSITIONS 70
 
 using namespace std;
 
@@ -60,7 +29,7 @@ class Board
         SDL_Rect getSlotScreenPosition (int line, int column);
 
         /*! Updates the board data */
-        void Update (int level);
+        void Update ();
 
         /*! Draw board and pipes on screen */
         void Draw ();
@@ -69,8 +38,11 @@ class Board
         bool isGameOver();
 
         void startGame();
+        void stopGame();
 
         Text* getGameOverText ();
+
+        void setLevel (eLevel level);
     protected:
     private:
         SDL_Surface *screen, *pipes_sprite1, *pipes_sprite2;
@@ -96,6 +68,8 @@ class Board
         // flags if the flow has started
         bool flow_started, cronometer_started;
 
+        eLevel m_level;
+
         static const int x_offset, y_offset;
         static const int slotSize;
         static const int lines, columns;
@@ -110,7 +84,7 @@ class Board
 
         void updateCronometer();
         void updateScore();
-        void updatePipes (int level);
+        void updatePipes (eLevel level);
         void updateStartingFlow();
         void updateNextPipe();
 

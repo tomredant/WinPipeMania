@@ -46,7 +46,6 @@ class Controller
         int game_state;
         int starting_time;
         int splashAlpha;
-        int mLevel;
 
         void startGame();
         void changeState (gameState new_state);
