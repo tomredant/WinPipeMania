@@ -11,11 +11,12 @@
 #include <SDL/SDL_ttf.h>
 #include "Log.h"
 #include "Controller.h"
-
+#include <QFile>
+#include <QDir>
 #define FRAMES_PER_SECOND 25
 
 const int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
-
+#undef main
 int main ( int argc, char** argv )
 {
     /* seed pseudo random numbers generator */
@@ -47,27 +48,40 @@ int main ( int argc, char** argv )
     }
 
     // load an image
-    SDL_Surface* background = IMG_Load("background.png");
+    QFile backgroundPath(":/background.gif");
+    QString backgroundPathTemp = QDir::temp().absolutePath() + "/" + backgroundPath.fileName().split("/").last();
+    backgroundPath.copy(backgroundPathTemp);
+    SDL_Surface* background = IMG_Load(backgroundPathTemp.toUtf8());
     if (!background)
     {
         printf("Unable to load background: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
 
-    SDL_Surface* pipes_sprite = IMG_Load("pipes.png");
+    QFile pipesPath(":/pipes.gif");
+    QString pipesPathTemp = QDir::temp().absolutePath() + "/" + pipesPath.fileName().split("/").last();
+    pipesPath.copy(pipesPathTemp);
+    SDL_Surface* pipes_sprite = IMG_Load(pipesPathTemp.toUtf8());
     if (!pipes_sprite)
     {
         printf("Unable to load pipesSprite: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
 
-    SDL_Surface* pipes_sprite_2 = IMG_Load("pipes2.png");
+    QFile pipes2Path(":/pipes2.gif");
+    QString pipes2PathTemp = QDir::temp().absolutePath() + "/" + pipes2Path.fileName().split("/").last();
+    pipes2Path.copy(pipes2PathTemp);
+    SDL_Surface* pipes_sprite_2 = IMG_Load(pipes2PathTemp.toUtf8());
     if (!pipes_sprite_2)
     {
         printf("Unable to load pipesSprite2: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
-    SDL_Surface* splash = IMG_Load("kct_logo.png");
+
+    QFile splashPath(":/kct_logo.gif");
+    QString splashPathTemp = QDir::temp().absolutePath() + "/" + splashPath.fileName().split("/").last();
+    splashPath.copy(splashPathTemp);
+    SDL_Surface* splash = IMG_Load(splashPathTemp.toUtf8());
     if (!splash)
     {
         printf("Unable to load kct logo: %s\n", SDL_GetError());

@@ -4,7 +4,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 
-#define FONT_PATH "batmfa__.ttf"
+#define FONT_PATH ":/batmfa__.ttf"
 
 class Text
 {

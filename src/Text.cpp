@@ -1,6 +1,7 @@
 #include "Text.h"
 #include "Log.h"
-
+#include <QFile>
+#include <QDir>
 Text::Text(SDL_Surface *s, int x, int y, int f_size)
 {
     screen = s;
@@ -32,8 +33,10 @@ void Text::setupFont() {
     if (font != NULL) {
         TTF_CloseFont(font);
     }
-
-    font = TTF_OpenFont(FONT_PATH, font_size);
+    QFile fontPath(FONT_PATH);
+    QString fontPathTemp = QDir::temp().absolutePath() + "/" + fontPath.fileName().split("/").last();
+    fontPath.copy(fontPathTemp);
+    font = TTF_OpenFont(fontPathTemp.toUtf8(), font_size);
 }
 
 void Text::Draw(const char *text) {
