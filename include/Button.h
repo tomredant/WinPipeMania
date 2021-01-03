@@ -7,7 +7,8 @@
 class Button
 {
     public:
-        Button (char *s, Text *t, int c, int _size, int _hover_size);
+        Button (const char *s, Text *t, int c, int _size, int _hover_size);
+        ~Button();
         bool mouseInBoundary (int x, int y);
         void Draw ();
         int getCode ();

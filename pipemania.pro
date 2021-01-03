@@ -3,6 +3,7 @@ CONFIG += console
 TARGET = pipemania
 RESOURCES = pipemania.qrc
 TEMPLATE = app
+TRANSLATIONS = pipemania_nl.ts
 CONFIG+=static
 QMAKE_LFLAGS+=-static -static-libgcc -static-libstdc++ -lstdc++
 DEFINES+=STATIC

@@ -1,6 +1,6 @@
 #include "Controller.h"
 #include "Log.h"
-
+#include <QObject>
 Controller::Controller(SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surface* pipe1, SDL_Surface* pipe2, SDL_Surface *s2)
 {
     screen = s;
@@ -12,13 +12,13 @@ Controller::Controller(SDL_Surface* s, SDL_Rect* c, SDL_Surface* back, SDL_Surfa
     splashScreen = new Splash(screen, s2);
     // Create start menu
     startMenu = new Menu();
-    startMenu->addButton(new Button("START GAME", new Text(screen, START_MENU_OFFSET_X, START_MENU_OFFSET_Y, MENU_SIZE), MENU_START_GAME, MENU_SIZE, MENU_HOVER_SIZE));
-    startMenu->addButton(new Button("EXIT", new Text(screen, EXIT_MENU_OFFSET_X, EXIT_MENU_OFFSET_Y, MENU_SIZE), MENU_EXIT, MENU_SIZE, MENU_HOVER_SIZE));
+    startMenu->addButton(new Button(QObject::tr("START GAME").toStdString().c_str(), new Text(screen, START_MENU_OFFSET_X, START_MENU_OFFSET_Y, MENU_SIZE), MENU_START_GAME, MENU_SIZE, MENU_HOVER_SIZE));
+    startMenu->addButton(new Button(QObject::tr("EXIT").toStdString().c_str(), new Text(screen, EXIT_MENU_OFFSET_X, EXIT_MENU_OFFSET_Y, MENU_SIZE), MENU_EXIT, MENU_SIZE, MENU_HOVER_SIZE));
 
     // Create end Menu
     endMenu = new Menu();
-    endMenu->addButton(new Button("YES", new Text(screen, PLAY_AGAIN_YES_OFFSET_X, PLAY_AGAIN_YES_OFFSET_Y, MENU_SIZE), MENU_PLAY_AGAIN_YES, MENU_SIZE, MENU_HOVER_SIZE));
-    endMenu->addButton(new Button("NO", new Text(screen, PLAY_AGAIN_NO_OFFSET_X, PLAY_AGAIN_NO_OFFSET_Y, MENU_SIZE), MENU_PLAY_AGAIN_NO, MENU_SIZE, MENU_HOVER_SIZE));
+    endMenu->addButton(new Button(QObject::tr("YES").toStdString().c_str(), new Text(screen, PLAY_AGAIN_YES_OFFSET_X, PLAY_AGAIN_YES_OFFSET_Y, MENU_SIZE), MENU_PLAY_AGAIN_YES, MENU_SIZE, MENU_HOVER_SIZE));
+    endMenu->addButton(new Button(QObject::tr("NO").toStdString().c_str(), new Text(screen, PLAY_AGAIN_NO_OFFSET_X, PLAY_AGAIN_NO_OFFSET_Y, MENU_SIZE), MENU_PLAY_AGAIN_NO, MENU_SIZE, MENU_HOVER_SIZE));
 }
 
 void Controller::mouseClick (int x, int y) {

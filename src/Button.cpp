@@ -1,6 +1,6 @@
 #include "Button.h"
 
-Button::Button (char *s, Text *t, int c, int _size, int _hover_size)
+Button::Button (const char *s, Text *t, int c, int _size, int _hover_size)
 {
     char ch = 0;
     int strSize = strcspn(s, &ch);
@@ -10,6 +10,10 @@ Button::Button (char *s, Text *t, int c, int _size, int _hover_size)
     code = c;
     size = _size;
     hover_size = _hover_size;
+}
+
+Button::~Button() {
+    delete[] str;
 }
 
 void Button::Draw ()

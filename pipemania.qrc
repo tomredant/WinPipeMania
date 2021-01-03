@@ -5,5 +5,6 @@
 		<file alias="pipes2.gif">pipes2.gif</file>
 		<file alias="kct_logo.gif">kct_logo.gif</file>
 		<file alias="batmfa__.ttf">batmfa__.ttf</file>
+		<file alias="pipemania_nl.qm">pipemania_nl.qm</file>
     </qresource>
 </RCC>

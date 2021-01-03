@@ -13,12 +13,21 @@
 #include "Controller.h"
 #include <QFile>
 #include <QDir>
+#include <QApplication>
+#include <QTranslator>
 #define FRAMES_PER_SECOND 25
 
 const int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
 #undef main
 int main ( int argc, char** argv )
 {
+
+    QApplication a(argc, argv);
+    QTranslator *translator = new QTranslator();
+    QString language = "nl";
+    QString translatorFile =(":/pipemania_" + language + ".qm");
+    translator->load(translatorFile);
+    a.installTranslator(translator);
     /* seed pseudo random numbers generator */
     srand(time(NULL));
 
@@ -41,6 +50,24 @@ int main ( int argc, char** argv )
     // create a new window
     SDL_Surface* screen = SDL_SetVideoMode(1024, 768, 16,
                                            SDL_HWSURFACE|SDL_DOUBLEBUF);
+    char* windowTitleHeap;
+    {
+        const char* windowTitle = QObject::tr("WinPipeMania").toStdString().c_str();
+        char ch = 0;
+        int strSize = strcspn(windowTitle, &ch);
+        windowTitleHeap = new char [strSize+1];
+        memcpy(windowTitleHeap,windowTitle,sizeof(char)*(strSize+1));
+    }
+
+    char* iconTextHeap;
+    {
+        const char* iconText = QObject::tr("WinPipeMania").toStdString().c_str();
+        char ch = 0;
+        int strSize = strcspn(iconText, &ch);
+        iconTextHeap = new char [strSize+1];
+        memcpy(iconTextHeap,iconText,sizeof(char)*(strSize+1));
+    }
+    SDL_WM_SetCaption(windowTitleHeap, iconTextHeap);
     if ( !screen )
     {
         printf("Unable to set 640x480 video: %s\n", SDL_GetError());
@@ -162,6 +189,8 @@ int main ( int argc, char** argv )
     SDL_FreeSurface(pipes_sprite);
     SDL_FreeSurface(pipes_sprite_2);
 
+    delete[] windowTitleHeap;
+    delete[] iconTextHeap;
     // all is well ;)
     printf("Exited cleanly\n");
     return EXIT_SUCCESS;

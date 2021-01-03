@@ -4,6 +4,7 @@
 #include <QDir>
 Text::Text(SDL_Surface *s, int x, int y, int f_size)
 {
+    str = nullptr;
     screen = s;
     rect = { x, y, 0, 0 };
     color = { 0xFF };
@@ -15,6 +16,8 @@ Text::Text(SDL_Surface *s, int x, int y, int f_size)
 
 Text::~Text() {
     TTF_CloseFont(font);
+    if(str != nullptr)
+        delete[] str;
 }
 
 SDL_Rect* Text::getRect() {
@@ -40,6 +43,12 @@ void Text::setupFont() {
 }
 
 void Text::Draw(const char *text) {
+    char ch = 0;
+    int strSize = strcspn(text, &ch);
+    if(str != nullptr)
+        delete[] str;
+    str = new char [strSize+1];
+    memcpy(str,text,sizeof(char)*(strSize+1));
     int w, h;
     TTF_SizeText(font, text, &w, &h);
     rect.w = w;

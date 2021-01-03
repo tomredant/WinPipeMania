@@ -29,6 +29,7 @@ class Text
         void setupFont();
 
         int font_size;
+        char* str;
 };
 
 #endif // TEXT_H

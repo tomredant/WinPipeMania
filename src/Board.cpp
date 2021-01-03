@@ -3,7 +3,7 @@
 #include "Board.h"
 #include "Pipe.h"
 #include "Log.h"
-
+#include <QObject>
 using namespace std;
 
 const int Board::x_offset = 227;
@@ -32,7 +32,7 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* pipe1, SDL_Surface* pipe
     // Game board positions
     for (int line = 0; line < lines; line++) {
         for (int column = 0; column < columns; column++) {
-            slots[line][column] = NULL;
+            mySlots[line][column] = NULL;
         }
     }
 
@@ -43,7 +43,7 @@ Board::Board (SDL_Surface* s, SDL_Rect* c, SDL_Surface* pipe1, SDL_Surface* pipe
         do {
             column = rand() % BOARD_COLUMNS;
             line   = rand() % BOARD_LINES;
-        } while(slots[line][column]);
+        } while(mySlots[line][column]);
 
         blockPosition(column, line);
     }
@@ -70,7 +70,7 @@ void Board::mouseClick (int x, int y)
     if (x >= x_min && x <= x_max && y >= y_min && y <= y_max) {
         int line = (x - x_min) / slotSize;
         int column = (y - y_min) / slotSize;
-        Pipe **pipe = &slots[line][column];
+        Pipe **pipe = &mySlots[line][column];
 
         if (*pipe) {
             if ((*pipe)->isBlocked())
@@ -113,7 +113,7 @@ Pipe* Board::getPipe(int column, int line) {
        line >= BOARD_LINES || line < 0) {
        return NULL;
     } else {
-        return slots[column][line];
+        return mySlots[column][line];
     }
 }
 
@@ -189,8 +189,8 @@ void Board::updateScore() {
 void Board::updatePipes() {
     for (int l = 0; l < lines; l++) {
         for (int c = 0; c < columns; c++) {
-            if (slots[l][c] != NULL) {
-                slots[l][c]->Update();
+            if (mySlots[l][c] != NULL) {
+                mySlots[l][c]->Update();
             }
         }
     }
@@ -198,7 +198,7 @@ void Board::updatePipes() {
 
 void Board::updateStartingFlow() {
     if (flow_started == false && timer == 0) {
-        Pipe *pipe = slots[INITIAL_COLUMN][INITIAL_LINE];
+        Pipe *pipe = mySlots[INITIAL_COLUMN][INITIAL_LINE];
         if (pipe && pipe->hasFlowEntry(FLOW_LEFT)) {
             current_pipe_column = INITIAL_COLUMN;
             current_pipe_line = INITIAL_LINE;
@@ -305,18 +305,18 @@ void Board::drawScore ()
 {
     std::ostringstream out;
     out << score;
-    score_label_text->Draw("Score");
+    score_label_text->Draw(QObject::tr("Score").toStdString().c_str());
     score_value_text->Draw(out.str().c_str(), score_font_size);
 }
 
 void Board::drawGameOver() {
     if (game_over_success) {
-        game_over_text->Draw("CONGRATULATIONS!");
+        game_over_text->Draw(QObject::tr("CONGRATULATIONS!").toStdString().c_str());
     } else {
-        game_over_text->Draw("GAME OVER!");
+        game_over_text->Draw(QObject::tr("GAME OVER!").toStdString().c_str());
     }
 
-    play_again->Draw("PLAY AGAIN ?");
+    play_again->Draw(QObject::tr("PLAY AGAIN ?").toStdString().c_str());
 }
 
 void Board::Draw ()
@@ -325,10 +325,10 @@ void Board::Draw ()
     for (int l = 0; l < lines; l++) {
         for (int c = 0; c < columns; c++) {
             // if != NULL we have a pipe to draw
-            if (slots[l][c] != NULL) {
+            if (mySlots[l][c] != NULL) {
                 SDL_Rect pos = getSlotScreenPosition(l, c);
 
-                slots[l][c]->Draw(screen, &pos, isPipeConnected(l, c));
+                mySlots[l][c]->Draw(screen, &pos, isPipeConnected(l, c));
             }
         }
     }
@@ -427,7 +427,7 @@ int Board::countMiddleRowBlocks() {
     int count = 0;
 
     for(int i = 0; i < columns; i++) {
-        if(slots[i][INITIAL_LINE]) {
+        if(mySlots[i][INITIAL_LINE]) {
             count++;
         }
     }
@@ -445,5 +445,5 @@ void Board::blockPosition(int column, int line) {
     Pipe* pipe = new Pipe(pipes_sprite1, pipes_sprite2, false, false, false, false);
     pipe->block();
 
-    slots[column][line] = pipe;
+    mySlots[column][line] = pipe;
 }

@@ -73,7 +73,7 @@ class Board
     private:
         SDL_Surface *screen, *pipes_sprite1, *pipes_sprite2;
         SDL_Rect *coordinates;
-        Pipe *slots[BOARD_LINES][BOARD_COLUMNS];
+        Pipe *mySlots[BOARD_LINES][BOARD_COLUMNS];
         Pipe *pool[POOL_SIZE];
 
         // the current pipe flowing
