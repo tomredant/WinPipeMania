@@ -2,7 +2,10 @@
 
 Button::Button (char *s, Text *t, int c, int _size, int _hover_size)
 {
-    str = s;
+    char ch = 0;
+    int strSize = strcspn(s, &ch);
+    str = new char [strSize+1];
+    memcpy(str,s,sizeof(char)*(strSize+1));
     text = t;
     code = c;
     size = _size;
