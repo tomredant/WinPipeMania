@@ -1,6 +1,6 @@
 QT       += core gui widgets
-CONFIG += console
-TARGET = pipemania
+#CONFIG += console
+TARGET = WinPipeMania
 RESOURCES = pipemania.qrc
 TEMPLATE = app
 TRANSLATIONS = pipemania_nl.ts
@@ -39,3 +39,5 @@ LIBS +=$$(MINGW_ROOT)/lib/libgdi32.a
 LIBS +=$$(MINGW_ROOT)/lib/libwinmm.a
 LIBS +=$$(MINGW_ROOT)/lib/libws2_32.a
 LIBS +=$$(MINGW_ROOT)/lib/libz.a
+INCLUDEPATH +=$$(SHOWLICENSE_ROOT)
+LIBS += -L$$(SHOWLICENSE_ROOT) -lshowlicense
